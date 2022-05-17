@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import GoogleAuth from "./components/GoogleAuth";
+import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "./firebase/firebase";
+import Home from "./routes/Home";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "./redux/actions/userAction";
+import { fetchPosts } from "./redux/actions/postsAction";
 
-function App() {
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.userSignin.user);
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchPosts());
+    }
+  }, [dispatch, user]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+        </Routes>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
