@@ -14,7 +14,7 @@ const Navbar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: "flex" } }}
           >
-            BookMarks
+            InstaClone
           </Typography>
         </Toolbar>
       </Container>

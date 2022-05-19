@@ -134,7 +134,6 @@ const SinglePost = ({ post }) => {
               {post.timestamp}
             </Typography>
           </Box>
-          <br />
         </CardContent>
       </Card>
     </>

@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <Box sx={{ mt: 10 }}>
       <Container maxWidth="md">
-        {/* <GoogleAuth />s */}
+        <GoogleAuth />
         <CreatePost />
         <Stack marginY={2}>
           <Feed />
