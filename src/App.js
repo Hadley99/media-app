@@ -15,9 +15,9 @@ import Home from "./routes/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "./redux/actions/userAction";
 import { fetchPosts } from "./redux/actions/postsAction";
+import Profile from "./routes/Profile";
 
 const App = () => {
-  const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userSignin.user);
   useEffect(() => {
@@ -34,7 +34,8 @@ const App = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/:id" element={<Profile />} />
         </Routes>
       </Router>
     </div>

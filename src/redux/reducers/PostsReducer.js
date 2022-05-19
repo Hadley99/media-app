@@ -11,7 +11,6 @@ export const createPostReducer = (state = {}, action) => {
     case Constants.POSTS_CREATE_FAIL:
       return {
         loading: false,
-        errorCode: action.payload.code,
         errorMessage: action.payload.message,
       };
 
@@ -20,6 +19,25 @@ export const createPostReducer = (state = {}, action) => {
   }
 };
 
+export const deletePostReducer = (state = {}, action) => {
+  switch (action.type) {
+    case Constants.POSTS_DELETE_REQUEST:
+      return { loading: true };
+
+    case Constants.POSTS_DELETE_SUCCESS:
+      return { loading: false };
+
+    case Constants.POSTS_DELETE_FAIL:
+      return {
+        loading: false,
+        errorCode: action.payload.code,
+        errorMessage: action.payload.message,
+      };
+
+    default:
+      return state;
+  }
+};
 export const fetchPostReducer = (state = {}, action) => {
   switch (action.type) {
     case Constants.POSTS_FETCH_REQUEST:

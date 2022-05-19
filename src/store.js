@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import {
   createPostReducer,
+  deletePostReducer,
   fetchPostReducer,
   likePostReducer,
 } from "./redux/reducers/PostsReducer";
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   createPost: createPostReducer,
   fetchPost: fetchPostReducer,
   likePost: likePostReducer,
+  deletePost: deletePostReducer,
 });
 
 const initialState = { fetchPost: { posts: [] } };

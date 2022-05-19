@@ -22,21 +22,27 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [tempImg, setTempImg] = useState(null);
   const dispatch = useDispatch();
+  const create = useSelector((state) => state.createPost);
+  const { loading } = create;
   const user = useSelector((state) => state.userSignin.user);
   const displayName = user?.displayName;
   const photoURL = user?.photoURL;
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createPost(tempImg, description));
+    setDescription("");
+    setTempImg(null);
   };
-  console.log(tempImg);
 
-  return (
+  return !loading ? (
     <Box component="form" onSubmit={handleSubmit}>
       <Card
         elevation={0}
         sx={{
+          borderRadius: 2,
           backgroundColor: grey[100],
+          border: 1,
+          borderColor: grey[300],
         }}
       >
         <CardHeader
@@ -44,7 +50,7 @@ const CreatePost = () => {
           title={displayName}
           titleTypographyProps={{ fontWeight: "medium", fontSize: "16px" }}
         />
-        <CardContent>
+        <CardContent sx={{ "&:last-child": { paddingBottom: 1 } }}>
           <TextField
             fullWidth
             variant="standard"
@@ -59,7 +65,9 @@ const CreatePost = () => {
                     accept="image/*"
                     id="icon-button-file"
                     type="file"
-                    onChange={(e) => setTempImg(e.target.files[0])}
+                    onChange={(e) => {
+                      setTempImg(e.target.files[0]);
+                    }}
                   />
                   <IconButton
                     color="primary"
@@ -73,17 +81,36 @@ const CreatePost = () => {
             }}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <CardActions sx={{ display: "flex", justifyContent: "end" }}>
-            {tempImg && (
-              <img src={tempImg} width="50vw" height="30vh" alt="test" />
-            )}
+          <CardActions
+            sx={{
+              paddingX: "0",
+              display: "flex",
+              alignItems: "end",
+            }}
+          >
             <Button variant="contained" type="submit">
               POST
             </Button>
+            {tempImg && (
+              <CardMedia
+                component="img"
+                sx={{
+                  borderRadius: 1,
+                  objectFit: "contain",
+                  width: "auto",
+                  marginLeft: "auto",
+                }}
+                height="100"
+                src={URL.createObjectURL(tempImg)}
+                alt="test"
+              />
+            )}
           </CardActions>
         </CardContent>
       </Card>
     </Box>
+  ) : (
+    <div>Loading...</div>
   );
 };
 export default CreatePost;
