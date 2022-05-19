@@ -4,8 +4,8 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase/firebase";
+import { setDoc } from "firebase/firestore";
+import { auth, userDocumentRef } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
 export const login = () => async (dispatch) => {
@@ -20,7 +20,7 @@ export const login = () => async (dispatch) => {
     const data = await signInWithPopup(auth, googleProvider);
 
     const { displayName, email, uid, photoURL } = data.user;
-    const userRef = doc(db, "users", `${data.user.uid}`);
+    const userRef = userDocumentRef(data.user.uid);
 
     await setDoc(userRef, { displayName, email, uid, photoURL });
 

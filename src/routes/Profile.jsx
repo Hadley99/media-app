@@ -1,12 +1,12 @@
 import { Container } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import ProfileDetails from "../components/ProfileDetails";
+import ProfileDetails from "../components/profile/ProfileDetails";
 
 const Profile = () => {
   return (
     <Box sx={{ mt: 10 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <ProfileDetails />
       </Container>
     </Box>

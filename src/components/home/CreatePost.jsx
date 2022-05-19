@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost } from "../redux/actions/postsAction";
+import { createPost } from "../../redux/actions/postsAction";
 import Box from "@mui/material/Box";
-
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import styled from "@emotion/styled";

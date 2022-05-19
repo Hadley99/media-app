@@ -10,9 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
 import { grey } from "@mui/material/colors";
 import {
   LazyLoadComponent,
@@ -21,7 +19,7 @@ import {
 import { Link } from "react-router-dom";
 import DropdownMenu from "./DropdownMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, toggleLike } from "../redux/actions/postsAction";
+import { deletePost, toggleLike } from "../../redux/actions/postsAction";
 const SinglePost = ({ post }) => {
   const user = useSelector((state) => state.userSignin.user);
   const currentUserUid = user?.uid;

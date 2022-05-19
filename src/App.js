@@ -14,7 +14,7 @@ import { db } from "./firebase/firebase";
 import Home from "./routes/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "./redux/actions/userAction";
-import { fetchPosts } from "./redux/actions/postsAction";
+import { fetchAllPosts } from "./redux/actions/fetchActions";
 import Profile from "./routes/Profile";
 
 const App = () => {
@@ -24,11 +24,6 @@ const App = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchPosts());
-    }
-  }, [dispatch, user]);
   return (
     <div className="App">
       <Router>

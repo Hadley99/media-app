@@ -1,8 +1,8 @@
 import { Container, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import CreatePost from "../components/CreatePost";
-import Feed from "../components/Feed";
+import CreatePost from "../components/home/CreatePost";
+import Feed from "../components/home/Feed";
 import GoogleAuth from "../components/GoogleAuth";
 
 const Home = () => {

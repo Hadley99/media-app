@@ -6,18 +6,24 @@ import {
   deletePostReducer,
   fetchPostReducer,
   likePostReducer,
+  selectedPostsReducer,
 } from "./redux/reducers/PostsReducer";
 
-import { userSignInReducer } from "./redux/reducers/userReducer";
+import {
+  selectedUserReducer,
+  userSignInReducer,
+} from "./redux/reducers/userReducer";
 const reducers = combineReducers({
   userSignin: userSignInReducer,
   createPost: createPostReducer,
   fetchPost: fetchPostReducer,
   likePost: likePostReducer,
   deletePost: deletePostReducer,
+  selectedUser: selectedUserReducer,
+  selectedPosts: selectedPostsReducer,
 });
 
-const initialState = { fetchPost: { posts: [] } };
+const initialState = { fetchPost: { posts: [] }, selectedPosts: { posts: [] } };
 
 const middleware = [thunk];
 
