@@ -7,8 +7,8 @@ import { useDispatch } from "react-redux";
 import { toggleUserFollow } from "../../redux/actions/userAction";
 const ProfileTop = ({ posts }) => {
   const dispatch = useDispatch();
-  const toggleFollow = (id) => {
-    dispatch(toggleUserFollow(id));
+  const toggleFollow = (followerId, followeeId) => {
+    dispatch(toggleUserFollow(followerId, followeeId));
   };
   const currentUser = useSelector((state) => state.userSignin.user);
   const user = useSelector((state) => state.selectedUser.user);
@@ -72,7 +72,7 @@ const ProfileTop = ({ posts }) => {
               fontWeight="medium"
             >
               Followers <br />
-              <Typography component="span">21</Typography>
+              <Typography component="span">{user?.followers.length}</Typography>
             </Typography>
             <Typography
               textAlign="center"
@@ -80,7 +80,7 @@ const ProfileTop = ({ posts }) => {
               fontWeight="medium"
             >
               Following <br />
-              <Typography component="span">21</Typography>
+              <Typography component="span">{user?.following.length}</Typography>
             </Typography>
           </Stack>
           <Button onClick={() => toggleFollow(user.uid, currentUser.uid)}>

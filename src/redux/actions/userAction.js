@@ -10,6 +10,7 @@ import {
   updateDoc,
   arrayRemove,
   arrayUnion,
+  addDoc,
 } from "firebase/firestore";
 import {
   auth,
@@ -31,13 +32,22 @@ export const login = () => async (dispatch) => {
 
     const { displayName, email, uid, photoURL } = data.user;
     const userRef = userDocumentRef(uid);
-
-    await setDoc(userRef, {
-      displayName,
-      email,
-      uid,
-      photoURL,
-    });
+    const userDoc = await getDoc(userDocumentRef(uid));
+    if (userDoc.exists()) {
+    } else {
+      await setDoc(
+        userRef,
+        {
+          displayName,
+          email,
+          uid,
+          photoURL,
+          followers: [],
+          following: [],
+        },
+        { merge: true }
+      );
+    }
 
     dispatch({
       type: Constants.USER_SIGNIN_SUCCESS,
@@ -83,25 +93,24 @@ export const toggleUserFollow =
     const followerDoc = await getDoc(userDocumentRef(followerId));
     const followeeDoc = await getDoc(userDocumentRef(followeeId));
     const FollowerUserArray = followerDoc.data().followers.includes(followerId);
-    const FolloweeUserArray = followeeDoc.data().followers.includes(followeeId);
-    if (followerDoc.data())
-      if (FollowerUserArray) {
-        await updateDoc(userDocumentRef(followerId), {
-          followers: arrayRemove(followerId),
-        });
-      } else {
-        await updateDoc(userDocumentRef(followerId), {
-          followers: arrayUnion(followerId),
-        });
-      }
-
-    if (FolloweeUserArray) {
-      await updateDoc(userDocumentRef(followeeId), {
+    const FolloweeUserArray = followeeDoc.data().following.includes(followeeId);
+    if (FollowerUserArray) {
+      await updateDoc(userDocumentRef(followerId), {
         followers: arrayRemove(followeeId),
       });
     } else {
-      await updateDoc(userDocumentRef(followeeId), {
+      await updateDoc(userDocumentRef(followerId), {
         followers: arrayUnion(followeeId),
+      });
+    }
+
+    if (FolloweeUserArray) {
+      await updateDoc(userDocumentRef(followeeId), {
+        following: arrayRemove(followerId),
+      });
+    } else {
+      await updateDoc(userDocumentRef(followeeId), {
+        following: arrayUnion(followerId),
       });
     }
   };
