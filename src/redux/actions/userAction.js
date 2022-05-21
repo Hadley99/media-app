@@ -4,8 +4,18 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { setDoc } from "firebase/firestore";
-import { auth, userDocumentRef } from "../../firebase/firebase";
+import {
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+} from "firebase/firestore";
+import {
+  auth,
+  userDocumentRef,
+  postDocumentRef,
+} from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
 export const login = () => async (dispatch) => {
@@ -20,9 +30,14 @@ export const login = () => async (dispatch) => {
     const data = await signInWithPopup(auth, googleProvider);
 
     const { displayName, email, uid, photoURL } = data.user;
-    const userRef = userDocumentRef(data.user.uid);
+    const userRef = userDocumentRef(uid);
 
-    await setDoc(userRef, { displayName, email, uid, photoURL });
+    await setDoc(userRef, {
+      displayName,
+      email,
+      uid,
+      photoURL,
+    });
 
     dispatch({
       type: Constants.USER_SIGNIN_SUCCESS,
@@ -62,3 +77,31 @@ export const logout = () => async (dispatch) => {
 
   dispatch({ type: Constants.USER_SIGNOUT });
 };
+
+export const toggleUserFollow =
+  (followerId, followeeId) => async (dispatch, getState) => {
+    const followerDoc = await getDoc(userDocumentRef(followerId));
+    const followeeDoc = await getDoc(userDocumentRef(followeeId));
+    const FollowerUserArray = followerDoc.data().followers.includes(followerId);
+    const FolloweeUserArray = followeeDoc.data().followers.includes(followeeId);
+    if (followerDoc.data())
+      if (FollowerUserArray) {
+        await updateDoc(userDocumentRef(followerId), {
+          followers: arrayRemove(followerId),
+        });
+      } else {
+        await updateDoc(userDocumentRef(followerId), {
+          followers: arrayUnion(followerId),
+        });
+      }
+
+    if (FolloweeUserArray) {
+      await updateDoc(userDocumentRef(followeeId), {
+        followers: arrayRemove(followeeId),
+      });
+    } else {
+      await updateDoc(userDocumentRef(followeeId), {
+        followers: arrayUnion(followeeId),
+      });
+    }
+  };

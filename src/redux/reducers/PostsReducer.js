@@ -44,7 +44,7 @@ export const fetchPostReducer = (state = {}, action) => {
       return { loading: true };
 
     case Constants.POSTS_FETCH_SUCCESS:
-      return { loading: false, posts: action.payload };
+      return { loading: false, posts: [...action.payload] };
 
     case Constants.POSTS_FETCH_FAIL:
       return {

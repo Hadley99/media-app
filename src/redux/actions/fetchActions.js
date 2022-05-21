@@ -88,7 +88,7 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
         timestamp: eachDoc.data().timestamp.toDate().toDateString(),
         id: eachDoc.id,
       });
-      console.log("from actions", items);
+
       dispatch({ type: Constants.SELECTED_USER_POSTS_SUCCESS, payload: items });
     });
   } catch (error) {

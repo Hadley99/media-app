@@ -4,6 +4,7 @@ import React from "react";
 import CreatePost from "../components/home/CreatePost";
 import Feed from "../components/home/Feed";
 import GoogleAuth from "../components/GoogleAuth";
+import PostModal from "../components/PostModal";
 
 const Home = () => {
   return (

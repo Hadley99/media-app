@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -20,8 +20,16 @@ import { Link } from "react-router-dom";
 import DropdownMenu from "./DropdownMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, toggleLike } from "../../redux/actions/postsAction";
+import PostModal from "../PostModal";
 const SinglePost = ({ post }) => {
+  const [openModal, setOpenModal] = useState(false);
   const user = useSelector((state) => state.userSignin.user);
+
+  const toggleModal = (id) => {
+    setOpenModal((prev) => !prev);
+    console.log(id);
+  };
+
   const currentUserUid = user?.uid;
   const dispatch = useDispatch();
   const handleLike = async (id) => {
@@ -30,6 +38,7 @@ const SinglePost = ({ post }) => {
   const handleDelete = (id, uid) => {
     dispatch(deletePost(id, uid));
   };
+
   return (
     <>
       <Card
@@ -71,6 +80,7 @@ const SinglePost = ({ post }) => {
 
         <CardMedia
           component="img"
+          onClick={() => toggleModal(post)}
           onDoubleClick={() => {
             handleLike(post.id);
           }}
@@ -85,6 +95,7 @@ const SinglePost = ({ post }) => {
           alt={post.description}
         />
 
+        <PostModal openModal={openModal} toggleModal={toggleModal} />
         <CardContent
           sx={{
             "&:last-child": { paddingBottom: 1 },

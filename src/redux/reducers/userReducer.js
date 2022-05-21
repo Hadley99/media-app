@@ -43,3 +43,21 @@ export const selectedUserReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const toggleUserFollowersReducer = (state = {}, action) => {
+  switch (action.type) {
+    case Constants.USER_FOLLOWERS_REQUEST:
+      return { loading: true };
+    case Constants.USER_FOLLOWERS_SUCCESS:
+      return { loading: false };
+    case Constants.USER_FOLLOWERS_FAIL:
+      return {
+        loading: false,
+        errorCode: action.payload.code,
+        errorMessage: action.payload.message,
+      };
+
+    default:
+      return state;
+  }
+};

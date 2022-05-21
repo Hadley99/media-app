@@ -1,4 +1,5 @@
-import { Box, CircularProgress } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import { useEffect } from "react";
 import {
   LazyLoadComponent,
@@ -20,10 +21,6 @@ const Feed = () => {
     if (user) {
       dispatch(fetchAllPosts());
     }
-
-    return () => {
-      dispatch(fetchAllPosts());
-    };
   }, [dispatch, user]);
   return (
     <Box>

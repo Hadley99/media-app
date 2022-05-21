@@ -11,6 +11,7 @@ import {
 
 import {
   selectedUserReducer,
+  toggleUserFollowersReducer,
   userSignInReducer,
 } from "./redux/reducers/userReducer";
 const reducers = combineReducers({
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   deletePost: deletePostReducer,
   selectedUser: selectedUserReducer,
   selectedPosts: selectedPostsReducer,
+  togglefollowers: toggleUserFollowersReducer,
 });
 
 const initialState = { fetchPost: { posts: [] }, selectedPosts: { posts: [] } };

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import GoogleButton from "react-google-button";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser, login, logout } from "../redux/actions/userAction";
+import { login, logout } from "../redux/actions/userAction";
 const GoogleAuth = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userSignin.user);
