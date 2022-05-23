@@ -25,7 +25,7 @@ const reducers = combineReducers({
   togglefollowers: toggleUserFollowersReducer,
 });
 
-const initialState = { fetchPost: { posts: [] }, selectedPosts: { posts: [] } };
+const initialState = { fetchPost: { posts: [] } };
 
 const middleware = [thunk];
 

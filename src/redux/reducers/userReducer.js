@@ -6,7 +6,7 @@ export const userSignInReducer = (state = {}, action) => {
       return { loading: true };
 
     case Constants.USER_SIGNIN_SUCCESS:
-      return { loading: false, user: action.payload };
+      return { loading: false, user: { ...action.payload } };
 
     case Constants.USER_SIGNIN_FAIL:
       return {
@@ -38,7 +38,6 @@ export const selectedUserReducer = (state = {}, action) => {
         errorCode: action.payload.code,
         errorMessage: action.payload.message,
       };
-
     default:
       return state;
   }

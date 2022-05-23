@@ -16,7 +16,8 @@ const style = {
   p: 4,
 };
 
-const PostModal = ({ openModal, toggleModal }) => {
+const PostModal = ({ openModal, toggleModal, post }) => {
+  console.log(post);
   return (
     <>
       <Modal

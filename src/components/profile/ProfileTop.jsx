@@ -83,7 +83,10 @@ const ProfileTop = ({ posts }) => {
               <Typography component="span">{user?.following.length}</Typography>
             </Typography>
           </Stack>
-          <Button onClick={() => toggleFollow(user.uid, currentUser.uid)}>
+          <Button
+            variant="contained"
+            onClick={() => toggleFollow(user.uid, currentUser.uid)}
+          >
             Follow
           </Button>
         </Box>

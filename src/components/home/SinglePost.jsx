@@ -27,7 +27,6 @@ const SinglePost = ({ post }) => {
 
   const toggleModal = (id) => {
     setOpenModal((prev) => !prev);
-    console.log(id);
   };
 
   const currentUserUid = user?.uid;
@@ -95,7 +94,11 @@ const SinglePost = ({ post }) => {
           alt={post.description}
         />
 
-        <PostModal openModal={openModal} toggleModal={toggleModal} />
+        <PostModal
+          openModal={openModal}
+          post={post}
+          toggleModal={toggleModal}
+        />
         <CardContent
           sx={{
             "&:last-child": { paddingBottom: 1 },

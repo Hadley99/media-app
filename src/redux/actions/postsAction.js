@@ -96,17 +96,20 @@ export const toggleLike = (id) => async (dispatch, getState) => {
       updatedPosts[idToReplace].likedBy = updatedPosts[
         idToReplace
       ].likedBy.filter((id) => id !== uid);
+      dispatch({ type: Constants.POSTS_LIKE_SUCCESS });
+
+      dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: updatedPosts });
       await updateDoc(postDocumentRef(id), {
         likedBy: arrayRemove(uid),
       });
     } else {
       updatedPosts[idToReplace].likedBy.push(uid);
+      dispatch({ type: Constants.POSTS_LIKE_SUCCESS });
+      dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: updatedPosts });
       await updateDoc(postDocumentRef(id), {
         likedBy: arrayUnion(uid),
       });
     }
-    dispatch({ type: Constants.POSTS_LIKE_SUCCESS });
-    dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: updatedPosts });
   } catch (error) {
     console.log(error);
   }

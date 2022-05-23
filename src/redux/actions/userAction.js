@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -62,12 +63,15 @@ export const login = () => async (dispatch) => {
 };
 
 export const fetchUser = () => (dispatch) => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
+    const userDataFromDb = await getDoc(userDocumentRef(user.uid));
+    const following = userDataFromDb.data().following;
+    const followers = userDataFromDb.data().followers;
     if (user) {
       const { displayName, email, uid, photoURL } = user;
       dispatch({
         type: Constants.USER_SIGNIN_SUCCESS,
-        payload: { displayName, email, uid, photoURL },
+        payload: { displayName, email, uid, photoURL, following, followers },
       });
     } else {
       dispatch({
@@ -89,28 +93,92 @@ export const logout = () => async (dispatch) => {
 };
 
 export const toggleUserFollow =
-  (followerId, followeeId) => async (dispatch, getState) => {
-    const followerDoc = await getDoc(userDocumentRef(followerId));
-    const followeeDoc = await getDoc(userDocumentRef(followeeId));
-    const FollowerUserArray = followerDoc.data().followers.includes(followerId);
-    const FolloweeUserArray = followeeDoc.data().following.includes(followeeId);
-    if (FollowerUserArray) {
-      await updateDoc(userDocumentRef(followerId), {
-        followers: arrayRemove(followeeId),
-      });
-    } else {
-      await updateDoc(userDocumentRef(followerId), {
-        followers: arrayUnion(followeeId),
-      });
-    }
+  (onPageUserId, currentUserId) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: Constants.USER_FOLLOWERS_REQUEST });
+      const {
+        userSignin: { user: currentUser },
 
-    if (FolloweeUserArray) {
-      await updateDoc(userDocumentRef(followeeId), {
-        following: arrayRemove(followerId),
-      });
-    } else {
-      await updateDoc(userDocumentRef(followeeId), {
-        following: arrayUnion(followerId),
-      });
+        selectedUser: { user },
+      } = getState();
+      const onPageUserDoc = await getDoc(userDocumentRef(onPageUserId));
+      const currentUserDoc = await getDoc(userDocumentRef(currentUserId));
+      const isFollowerInUserArray = onPageUserDoc
+        .data()
+        .followers.includes(currentUserId);
+      const isFolloweeInUserArray = currentUserDoc
+        .data()
+        .following.includes(onPageUserId);
+      let copyOfCurrentUser = JSON.parse(JSON.stringify(currentUser));
+      let copyOfSelectedUser = JSON.parse(JSON.stringify(user));
+      console.log("onPageUserDoc", onPageUserDoc.data());
+      console.log("currentUserDoc", currentUserDoc.data());
+      // console.log(" isFollowerInUserArray", isFollowerInUserArray);
+      // console.log("isFolloweeInUserArray ", isFolloweeInUserArray);
+      if (isFollowerInUserArray) {
+        copyOfSelectedUser.followers = copyOfSelectedUser.followers.filter(
+          (id) => id !== currentUserId
+        );
+        dispatch({
+          type: Constants.USER_FOLLOWERS_SUCCESS,
+        });
+        console.log(copyOfSelectedUser);
+        dispatch({
+          type: Constants.SELECTED_USER_FETCH_SUCCESS,
+          payload: copyOfSelectedUser,
+        });
+        await updateDoc(userDocumentRef(onPageUserId), {
+          followers: arrayRemove(currentUserId),
+        });
+      } else {
+        copyOfSelectedUser.followers = [
+          ...copyOfSelectedUser.followers,
+          currentUserId,
+        ];
+
+        dispatch({
+          type: Constants.USER_FOLLOWERS_SUCCESS,
+        });
+        dispatch({
+          type: Constants.SELECTED_USER_FETCH_SUCCESS,
+          payload: copyOfSelectedUser,
+        });
+
+        await updateDoc(userDocumentRef(onPageUserId), {
+          followers: arrayUnion(currentUserId),
+        });
+      }
+
+      if (isFolloweeInUserArray) {
+        copyOfCurrentUser.following = copyOfCurrentUser.following.filter(
+          (id) => id !== onPageUserId
+        );
+        dispatch({ type: Constants.USER_FOLLOWERS_SUCCESS });
+        console.log(copyOfCurrentUser);
+        dispatch({
+          type: Constants.USER_SIGNIN_SUCCESS,
+          payload: copyOfCurrentUser,
+        });
+        await updateDoc(userDocumentRef(currentUserId), {
+          following: arrayRemove(onPageUserId),
+        });
+      } else {
+        copyOfCurrentUser.following = [
+          ...copyOfCurrentUser.followers,
+          currentUserId,
+        ];
+
+        dispatch({ type: Constants.USER_FOLLOWERS_SUCCESS });
+        console.log(copyOfCurrentUser);
+        dispatch({
+          type: Constants.USER_SIGNIN_SUCCESS,
+          payload: copyOfCurrentUser,
+        });
+        await updateDoc(userDocumentRef(currentUserId), {
+          following: arrayUnion(onPageUserId),
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
