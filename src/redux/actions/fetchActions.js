@@ -1,9 +1,11 @@
 import {
   getDoc,
   getDocs,
+  limit,
   orderBy,
   Query,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import {
@@ -21,7 +23,13 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
     let userDocRef;
     let userResult;
 
-    const q = query(postsCollectionRef(), orderBy("timestamp", "desc"));
+    const q = query(
+      postsCollectionRef(),
+      orderBy("timestamp", "desc"),
+
+      limit(2)
+    );
+
     const querySnapshot = await getDocs(q);
 
     let items = [];
@@ -91,6 +99,17 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
 
       dispatch({ type: Constants.SELECTED_USER_POSTS_SUCCESS, payload: items });
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const fetchSelectedPost = (postid) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: Constants.SELECTED_POST_FETCH_REQUEST });
+    const res = await getDoc(postDocumentRef(postid));
+    const data = res.data();
+
+    dispatch({ type: Constants.SELECTED_POST_FETCH_SUCCESS, payload: data });
   } catch (error) {
     console.log(error);
   }

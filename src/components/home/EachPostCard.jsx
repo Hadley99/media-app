@@ -20,8 +20,8 @@ import { Link } from "react-router-dom";
 import DropdownMenu from "./DropdownMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, toggleLike } from "../../redux/actions/postsAction";
-import PostModal from "../PostModal";
-const SinglePost = ({ post }) => {
+import SinglePost from "../singlePost/SinglePost";
+const EachPostCard = ({ post }) => {
   const [openModal, setOpenModal] = useState(false);
   const user = useSelector((state) => state.userSignin.user);
 
@@ -46,18 +46,20 @@ const SinglePost = ({ post }) => {
         sx={{
           borderRadius: 2,
           marginBottom: 2,
-          backgroundColor: grey[200],
+          backgroundColor: "white",
           border: 1,
           borderColor: grey[300],
         }}
       >
         <CardHeader
           avatar={
-            <Avatar
-              aria-label="profile"
-              sx={{ width: 35, height: 35 }}
-              src={post.createdBy.photoURL}
-            />
+            <Link to={`/user/${post.createdBy.uid}`}>
+              <Avatar
+                aria-label="profile"
+                sx={{ width: 35, height: 35 }}
+                src={post.createdBy.photoURL}
+              />
+            </Link>
           }
           action={
             <DropdownMenu
@@ -67,7 +69,7 @@ const SinglePost = ({ post }) => {
             />
           }
           title={
-            <Link to={`/${post.createdBy.uid}`}>
+            <Link to={`/user/${post.createdBy.uid}`}>
               {post.createdBy.displayName}
             </Link>
           }
@@ -76,29 +78,21 @@ const SinglePost = ({ post }) => {
             fontSize: "16px",
           }}
         />
+        <Link to={`/post/${post.id}`}>
+          <CardMedia
+            component="img"
+            sx={{
+              maxHeight: { xs: 400, md: 500 },
+              paddingTop: 0,
+              paddingBottom: 0,
+              objectFit: "contain",
+              backgroundColor: "black",
+            }}
+            src={post.image}
+            alt={post.description}
+          />
+        </Link>
 
-        <CardMedia
-          component="img"
-          onClick={() => toggleModal(post)}
-          onDoubleClick={() => {
-            handleLike(post.id);
-          }}
-          sx={{
-            maxHeight: { xs: 400, md: 500 },
-            paddingTop: 0,
-            paddingBottom: 0,
-            objectFit: "contain",
-            backgroundColor: "black",
-          }}
-          src={post.image}
-          alt={post.description}
-        />
-
-        <PostModal
-          openModal={openModal}
-          post={post}
-          toggleModal={toggleModal}
-        />
         <CardContent
           sx={{
             "&:last-child": { paddingBottom: 1 },
@@ -132,7 +126,9 @@ const SinglePost = ({ post }) => {
             </Typography>
             <Typography fontSize={16} variant="body2">
               <Typography component="span" fontWeight="bold">
-                {post.createdBy.displayName}{" "}
+                <Link to={`/user/${post.createdBy.uid}`}>
+                  {post.createdBy.displayName}
+                </Link>{" "}
               </Typography>
 
               {post.description}
@@ -152,4 +148,4 @@ const SinglePost = ({ post }) => {
   );
 };
 
-export default SinglePost;
+export default EachPostCard;

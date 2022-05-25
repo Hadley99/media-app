@@ -14,8 +14,11 @@ import { db } from "./firebase/firebase";
 import Home from "./routes/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "./redux/actions/userAction";
-import { fetchAllPosts } from "./redux/actions/fetchActions";
+
 import Profile from "./routes/Profile";
+import { Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import SinglePost from "./components/singlePost/SinglePost";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,15 +28,16 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div className="App">
+    <Box sx={{ backgroundColor: grey[50] }} className="App">
       <Router>
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route path="/:id" element={<Profile />} />
+          <Route path="/user/:id" element={<Profile />} />
+          <Route path="/post/:postid" element={<SinglePost />} />
         </Routes>
       </Router>
-    </div>
+    </Box>
   );
 };
 

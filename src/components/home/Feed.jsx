@@ -8,7 +8,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPosts } from "../../redux/actions/fetchActions";
 
-import SinglePost from "./SinglePost";
+import EachPostCard from "./EachPostCard";
+import { Button } from "@mui/material";
+
+import SinglePost from "../singlePost/SinglePost";
 
 const Feed = () => {
   const dispatch = useDispatch();
@@ -36,8 +39,11 @@ const Feed = () => {
           <CircularProgress />
         </Box>
       ) : (
-        posts && posts.map((post) => <SinglePost key={post.id} post={post} />)
+        posts && posts.map((post) => <EachPostCard key={post.id} post={post} />)
       )}
+      <Button fullWidth variant="contained">
+        Load More
+      </Button>
     </Box>
   );
 };

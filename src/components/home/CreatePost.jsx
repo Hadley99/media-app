@@ -11,8 +11,9 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
-import { grey, red } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import { Button, CardActions } from "@mui/material";
+import { Link } from "react-router-dom";
 const Input = styled("input")({
   display: "none",
 });
@@ -39,14 +40,18 @@ const CreatePost = () => {
         elevation={0}
         sx={{
           borderRadius: 2,
-          backgroundColor: grey[100],
+          backgroundColor: "white",
           border: 1,
           borderColor: grey[300],
         }}
       >
         <CardHeader
-          avatar={<Avatar aria-label="profile" src={photoURL} />}
-          title={displayName}
+          avatar={
+            <Link to={`/user/${user?.uid}`}>
+              <Avatar aria-label="profile" src={photoURL} />
+            </Link>
+          }
+          title={<Link to={`/user/${user?.uid}`}>{user?.displayName}</Link>}
           titleTypographyProps={{ fontWeight: "medium", fontSize: "16px" }}
         />
         <CardContent sx={{ "&:last-child": { paddingBottom: 1 } }}>
@@ -87,7 +92,7 @@ const CreatePost = () => {
               alignItems: "end",
             }}
           >
-            <Button variant="contained" type="submit">
+            <Button disableElevation variant="contained" type="submit">
               POST
             </Button>
             {tempImg && (

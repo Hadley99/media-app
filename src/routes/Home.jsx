@@ -4,13 +4,12 @@ import React from "react";
 import CreatePost from "../components/home/CreatePost";
 import Feed from "../components/home/Feed";
 import GoogleAuth from "../components/GoogleAuth";
-import PostModal from "../components/PostModal";
 
 const Home = () => {
   return (
-    <Box sx={{ mt: 10 }}>
+    <Box sx={{ mt: 8, pt: 2 }}>
       <Container maxWidth="md">
-        <GoogleAuth />
+        {/* <GoogleAuth /> */}
         <CreatePost />
         <Stack marginY={2}>
           <Feed />

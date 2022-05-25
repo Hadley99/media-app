@@ -93,3 +93,20 @@ export const selectedPostsReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const selectedPostReducer = (state = {}, action) => {
+  switch (action.type) {
+    case Constants.SELECTED_POST_FETCH_REQUEST:
+      return { loading: true };
+    case Constants.SELECTED_POST_FETCH_SUCCESS:
+      return { loading: false, post: action.payload };
+    case Constants.SELECTED_POST_FETCH_FAIL:
+      return {
+        loading: false,
+        errorCode: action.payload.code,
+        errorMessage: action.payload.message,
+      };
+    default:
+      return state;
+  }
+};
