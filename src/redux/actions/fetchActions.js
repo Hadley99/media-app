@@ -16,12 +16,14 @@ import {
 } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
+const fetchSpecificUserData = async (userUid) => {
+  const res = await getDoc(userDocumentRef(userUid));
+  return res.data();
+};
+
 export const fetchAllPosts = () => async (dispatch, getState) => {
   try {
     dispatch({ type: Constants.POSTS_FETCH_REQUEST });
-    let userData;
-    let userDocRef;
-    let userResult;
 
     const q = query(
       postsCollectionRef(),
@@ -34,16 +36,14 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
 
     let items = [];
     querySnapshot.docs.forEach(async (eachDoc) => {
-      userData = eachDoc.data().createdBy;
-      userDocRef = userDocumentRef(userData);
-      userResult = await getDoc(userDocRef);
-
+      const idRef = eachDoc.data().createdBy;
+      const userResult = await fetchSpecificUserData(idRef);
       items.push({
         ...eachDoc.data(),
         createdBy: {
           uid: eachDoc.data().createdBy,
-          displayName: userResult.data().displayName,
-          photoURL: userResult.data().photoURL,
+          displayName: userResult.displayName,
+          photoURL: userResult.photoURL,
         },
         timestamp: eachDoc.data().timestamp.toDate().toDateString(),
         id: eachDoc.id,
@@ -58,9 +58,7 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
 export const fetchSelectedUser = (uid) => async (dispatch, getState) => {
   try {
     dispatch({ type: Constants.SELECTED_USER_FETCH_REQUEST });
-    const res = await getDoc(userDocumentRef(uid));
-    const data = res.data();
-
+    const data = await fetchSpecificUserData(uid);
     dispatch({ type: Constants.SELECTED_USER_FETCH_SUCCESS, payload: data });
   } catch (error) {
     console.log(error);
@@ -70,9 +68,7 @@ export const fetchSelectedUser = (uid) => async (dispatch, getState) => {
 export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
   try {
     dispatch({ type: Constants.SELECTED_USER_POSTS_REQUEST });
-    let userData;
-    let userDocRef;
-    let userResult;
+
     const q = query(
       postsCollectionRef(),
       where("createdBy", "==", `${uid}`),
@@ -82,16 +78,14 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
     let items = [];
 
     querySnapshot.docs.forEach(async (eachDoc) => {
-      userData = eachDoc.data().createdBy;
-      userDocRef = userDocumentRef(userData);
-      userResult = await getDoc(userDocRef);
-
+      const idRef = eachDoc.data().createdBy;
+      const userResult = await fetchSpecificUserData(idRef);
       items.push({
         ...eachDoc.data(),
         createdBy: {
           uid: eachDoc.data().createdBy,
-          displayName: userResult.data().displayName,
-          photoURL: userResult.data().photoURL,
+          displayName: userResult.displayName,
+          photoURL: userResult.photoURL,
         },
         timestamp: eachDoc.data().timestamp.toDate().toDateString(),
         id: eachDoc.id,
@@ -106,10 +100,22 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
 export const fetchSelectedPost = (postid) => async (dispatch, getState) => {
   try {
     dispatch({ type: Constants.SELECTED_POST_FETCH_REQUEST });
-    const res = await getDoc(postDocumentRef(postid));
-    const data = res.data();
 
-    dispatch({ type: Constants.SELECTED_POST_FETCH_SUCCESS, payload: data });
+    const res = await getDoc(postDocumentRef(postid));
+    const idRef = res.data().createdBy;
+    const userResult = await fetchSpecificUserData(idRef);
+    let allData = {
+      ...res.data(),
+      createdBy: {
+        uid: res.data().createdBy,
+        displayName: userResult.displayName,
+        photoURL: userResult.photoURL,
+      },
+      timestamp: res.data().timestamp.toDate().toDateString(),
+      id: res.id,
+    };
+
+    dispatch({ type: Constants.SELECTED_POST_FETCH_SUCCESS, payload: allData });
   } catch (error) {
     console.log(error);
   }
