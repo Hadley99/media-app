@@ -39,6 +39,11 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 export const postsCollectionRef = () => collection(db, "posts");
-export const commentsDocRef = (postId) => doc(db, "comments", postId);
+export const commentsCollectionRef = () => collection(db, "comments");
 export const userDocumentRef = (docId) => doc(db, "users", docId);
 export const postDocumentRef = (docId) => doc(db, "posts", docId);
+
+export const fetchSpecificUserData = async (userUid) => {
+  const res = await getDoc(userDocumentRef(userUid));
+  return res.data();
+};

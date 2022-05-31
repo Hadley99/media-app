@@ -12,6 +12,7 @@ import { grey } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { createComment } from "../../redux/actions/commentsAction";
 import { fetchSelectedPost } from "../../redux/actions/fetchActions";
 
 const CreateComment = () => {
@@ -24,42 +25,49 @@ const CreateComment = () => {
   }, [dispatch, postid]);
 
   const [comment, setComment] = useState("");
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(createComment(postid, user?.uid, comment));
+  };
   return (
     <Box>
-      <CardContent
-        sx={{
-          "&:last-child": { paddingBottom: 1, padding: 0 },
-          display: "flex  ",
-        }}
-      >
-        <Avatar
-          aria-label="profile"
-          sx={{ width: 30, height: 30 }}
-          src={user?.photoURL}
-        />
-        <TextField
-          fullWidth
-          variant="standard"
-          id="outlined-textarea"
-          placeholder={`Comment as ${user?.displayName}`}
-          multiline
-          maxRows={4}
-          onChange={(e) => setComment(e.target.value)}
-          InputProps={{}}
-        />
-        <label htmlFor="button-comment">
-          <Button
-            disableElevation
-            size="small"
-            variant="contained"
-            id="button-comment"
-            type="submit"
-          >
-            COMMENT
-          </Button>
-        </label>
-      </CardContent>
+      <form onSubmit={handleSubmit}>
+        <CardContent
+          sx={{
+            "&:last-child": { paddingBottom: 1, padding: 0 },
+          }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Avatar
+              aria-label="profile"
+              sx={{ width: 33, height: 33, marginRight: 1 }}
+              src={user?.photoURL}
+            />
+            <TextField
+              fullWidth
+              variant="standard"
+              id="outlined-textarea"
+              placeholder={`Comment as ${user?.displayName}`}
+              multiline
+              maxRows={4}
+              onChange={(e) => setComment(e.target.value)}
+              InputProps={{}}
+            />
+          </Box>
+          <Box sx={{ display: "flex" }}>
+            <Button
+              sx={{ marginTop: 1, marginLeft: "auto" }}
+              disableElevation
+              size="small"
+              variant="contained"
+              id="button-comment"
+              type="submit"
+            >
+              COMMENT
+            </Button>
+          </Box>
+        </CardContent>
+      </form>
     </Box>
   );
 };

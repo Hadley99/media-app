@@ -10,16 +10,12 @@ import {
 } from "firebase/firestore";
 import {
   db,
+  fetchSpecificUserData,
   postDocumentRef,
   postsCollectionRef,
   userDocumentRef,
 } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
-
-const fetchSpecificUserData = async (userUid) => {
-  const res = await getDoc(userDocumentRef(userUid));
-  return res.data();
-};
 
 export const fetchAllPosts = () => async (dispatch, getState) => {
   try {
@@ -28,7 +24,6 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
     const q = query(
       postsCollectionRef(),
       orderBy("timestamp", "desc"),
-
       limit(2)
     );
 
