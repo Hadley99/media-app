@@ -13,6 +13,7 @@ const CreateComment = ({ postid }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     dispatch(createComment(postid, user?.uid, comment));
     setComment("");
   };

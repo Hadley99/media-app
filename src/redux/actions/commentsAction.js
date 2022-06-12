@@ -58,13 +58,15 @@ export const fetchCommentsOfPost = (postid) => async (dispatch, getState) => {
 
 export const createComment =
   (postId, userId, comment) => async (dispatch, getState) => {
-    if (comment == null) return;
+    if (comment === "") return;
     try {
       dispatch({ type: Constants.CREATE_COMMENTS_REQUEST });
+      const trimmedComment = comment.trim();
+      console.log(trimmedComment);
       await addDoc(commentsCollectionRef(), {
         createdBy: userId,
         postId,
-        description: comment,
+        description: trimmedComment,
         timestamp: serverTimestamp(),
       });
       dispatch({ type: Constants.CREATE_COMMENTS_SUCCESS });
