@@ -43,8 +43,7 @@ const CreatePost = () => {
     setFile(null);
     setImageUrl("");
   };
-  console.log(file, " file from parent");
-  console.log(imageUrl, "image url from parent");
+
   return !loading ? (
     <Box component="form" onSubmit={handleSubmit}>
       <Card

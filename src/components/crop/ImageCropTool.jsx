@@ -20,7 +20,6 @@ const ImageCropTool = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    console.log(croppedAreaPixels);
     setCroppedAreaPixels(croppedAreaPixels);
   };
 

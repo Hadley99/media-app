@@ -58,9 +58,9 @@ export const fetchCommentsOfPost = (postid) => async (dispatch, getState) => {
 
 export const createComment =
   (postId, userId, comment) => async (dispatch, getState) => {
+    if (comment == null) return;
     try {
       dispatch({ type: Constants.CREATE_COMMENTS_REQUEST });
-
       await addDoc(commentsCollectionRef(), {
         createdBy: userId,
         postId,

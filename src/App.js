@@ -17,7 +17,6 @@ const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userSignin.user);
 
-  console.log(user);
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -30,6 +29,8 @@ const App = () => {
             email: currentUserFromDb.data()?.email,
             uid: currentUserFromDb.data()?.uid,
             photoURL: currentUserFromDb.data()?.photoURL,
+            followers: currentUserFromDb.data()?.followers,
+            following: currentUserFromDb.data()?.following,
           },
         });
       } else {

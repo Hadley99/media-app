@@ -27,6 +27,9 @@ import { fetchAllPosts } from "./fetchActions";
 
 export const createPost =
   (tempImg, description) => async (dispatch, getState) => {
+    if (tempImg == null) {
+      return; // dispatch({ type: Constants.POSTS_CREATE_FAIL, payload: {} });
+    }
     dispatch({ type: Constants.POSTS_CREATE_REQUEST });
     const {
       userSignin: {
@@ -34,7 +37,6 @@ export const createPost =
       },
     } = getState();
 
-    if (tempImg == null) return;
     const imageRef = ref(storage, `images/${uid}/${tempImg.name + v4()}`);
     await uploadBytes(imageRef, tempImg);
 
@@ -119,7 +121,7 @@ export const toggleLike = (id) => async (dispatch, getState) => {
         copyOfSelectedPost.likedBy = copyOfSelectedPost.likedBy.filter(
           (id) => id !== uid
         );
-        console.log(copyOfSelectedPost, "after removing");
+
         dispatch({
           type: Constants.POSTS_LIKE_SUCCESS,
         });
@@ -144,7 +146,7 @@ export const toggleLike = (id) => async (dispatch, getState) => {
       if (post) {
         let copyOfSelectedPost = { ...post };
         copyOfSelectedPost.likedBy.push(uid);
-        console.log(copyOfSelectedPost, "after adding");
+
         dispatch({
           type: Constants.POSTS_LIKE_SUCCESS,
         });

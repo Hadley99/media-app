@@ -101,10 +101,7 @@ export const toggleUserFollow =
         .following.includes(onPageUserId);
       let copyOfCurrentUser = JSON.parse(JSON.stringify(currentUser));
       let copyOfSelectedUser = JSON.parse(JSON.stringify(user));
-      console.log("onPageUserDoc", onPageUserDoc.data());
-      console.log("currentUserDoc", currentUserDoc.data());
-      // console.log(" isFollowerInUserArray", isFollowerInUserArray);
-      // console.log("isFolloweeInUserArray ", isFolloweeInUserArray);
+
       if (isFollowerInUserArray) {
         copyOfSelectedUser.followers = copyOfSelectedUser.followers.filter(
           (id) => id !== currentUserId
@@ -112,7 +109,7 @@ export const toggleUserFollow =
         dispatch({
           type: Constants.USER_FOLLOWERS_SUCCESS,
         });
-        console.log(copyOfSelectedUser);
+
         dispatch({
           type: Constants.SELECTED_USER_FETCH_SUCCESS,
           payload: copyOfSelectedUser,
@@ -144,7 +141,7 @@ export const toggleUserFollow =
           (id) => id !== onPageUserId
         );
         dispatch({ type: Constants.USER_FOLLOWERS_SUCCESS });
-        console.log(copyOfCurrentUser);
+
         dispatch({
           type: Constants.USER_SIGNIN_SUCCESS,
           payload: copyOfCurrentUser,
@@ -159,7 +156,7 @@ export const toggleUserFollow =
         ];
 
         dispatch({ type: Constants.USER_FOLLOWERS_SUCCESS });
-        console.log(copyOfCurrentUser);
+
         dispatch({
           type: Constants.USER_SIGNIN_SUCCESS,
           payload: copyOfCurrentUser,
