@@ -25,7 +25,11 @@ export const deletePostReducer = (state = {}, action) => {
       return { loading: true };
 
     case Constants.POSTS_DELETE_SUCCESS:
-      return { loading: false };
+      return {
+        loading: false,
+        success: action.payload.success,
+        message: action.payload.message,
+      };
 
     case Constants.POSTS_DELETE_FAIL:
       return {
@@ -99,7 +103,7 @@ export const selectedPostReducer = (state = {}, action) => {
     case Constants.SELECTED_POST_FETCH_REQUEST:
       return { loading: true };
     case Constants.SELECTED_POST_FETCH_SUCCESS:
-      return { loading: false, post: { ...action.payload } };
+      return { loading: false, post: action.payload };
     case Constants.SELECTED_POST_FETCH_FAIL:
       return {
         loading: false,

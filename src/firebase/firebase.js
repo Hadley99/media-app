@@ -3,21 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import {
-  addDoc,
-  arrayRemove,
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -41,6 +27,7 @@ export const auth = getAuth(app);
 export const postsCollectionRef = () => collection(db, "posts");
 export const commentsCollectionRef = () => collection(db, "comments");
 export const userDocumentRef = (docId) => doc(db, "users", docId);
+export const commentsDocumentRef = (docId) => doc(db, "comments", docId);
 export const postDocumentRef = (docId) => doc(db, "posts", docId);
 
 export const fetchSpecificUserData = async (userUid) => {

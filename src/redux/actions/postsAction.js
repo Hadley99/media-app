@@ -1,6 +1,9 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Constants } from "../constants/constants";
 import {
+  commentsCollectionRef,
+  commentsDocumentRef,
+  db,
   postDocumentRef,
   postsCollectionRef,
   storage,
@@ -13,12 +16,13 @@ import {
   deleteDoc,
   getDoc,
   getDocs,
-  orderBy,
   query,
   serverTimestamp,
   updateDoc,
+  where,
+  writeBatch,
 } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+
 import { fetchAllPosts } from "./fetchActions";
 
 export const createPost =
@@ -58,13 +62,27 @@ export const deletePost = (id, createdBy) => async (dispatch, getState) => {
 
   try {
     dispatch({ type: Constants.POSTS_DELETE_REQUEST });
-    const postRef = postDocumentRef(id);
-
-    let filteredArray = posts.filter((post) => post.id !== id);
     if (uid === createdBy) {
-      await deleteDoc(postRef);
-      dispatch({ type: Constants.POSTS_DELETE_SUCCESS });
+      const postRef = postDocumentRef(id);
+      const batch = writeBatch(db);
+
+      let copyOfPosts = [...posts];
+      let filteredArray = copyOfPosts.filter((post) => post.id !== id);
+
+      dispatch({
+        type: Constants.POSTS_DELETE_SUCCESS,
+        payload: { success: true, message: "Post Deleted Succesfully!" },
+      });
       dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: filteredArray });
+
+      //Deleting comments in firestore db
+      const q = query(commentsCollectionRef(), where("postId", "==", `${id}`));
+      const queryResult = await getDocs(q);
+      queryResult.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      await deleteDoc(postRef);
     } else {
       dispatch({
         type: Constants.POSTS_DELETE_FAIL,
@@ -82,6 +100,7 @@ export const toggleLike = (id) => async (dispatch, getState) => {
       user: { uid },
     },
     fetchPost: { posts },
+    selectedPost: { post },
   } = getState();
 
   try {
@@ -91,19 +110,50 @@ export const toggleLike = (id) => async (dispatch, getState) => {
 
     const likedUsersArray = res.data().likedBy.includes(uid);
     let updatedPosts = [...posts];
-    let idToReplace = updatedPosts.findIndex((item) => item.id === id);
+
+    let indexOfIdToReplace = updatedPosts.findIndex((item) => item.id === id);
+
     if (likedUsersArray) {
-      updatedPosts[idToReplace].likedBy = updatedPosts[
-        idToReplace
+      if (post) {
+        let copyOfSelectedPost = { ...post };
+        copyOfSelectedPost.likedBy = copyOfSelectedPost.likedBy.filter(
+          (id) => id !== uid
+        );
+        console.log(copyOfSelectedPost, "after removing");
+        dispatch({
+          type: Constants.POSTS_LIKE_SUCCESS,
+        });
+        dispatch({
+          type: Constants.SELECTED_POST_FETCH_SUCCESS,
+          payload: { ...copyOfSelectedPost },
+        });
+      }
+      updatedPosts[indexOfIdToReplace].likedBy = updatedPosts[
+        indexOfIdToReplace
       ].likedBy.filter((id) => id !== uid);
       dispatch({ type: Constants.POSTS_LIKE_SUCCESS });
 
-      dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: updatedPosts });
+      dispatch({
+        type: Constants.POSTS_FETCH_SUCCESS,
+        payload: updatedPosts,
+      });
       await updateDoc(postDocumentRef(id), {
         likedBy: arrayRemove(uid),
       });
     } else {
-      updatedPosts[idToReplace].likedBy.push(uid);
+      if (post) {
+        let copyOfSelectedPost = { ...post };
+        copyOfSelectedPost.likedBy.push(uid);
+        console.log(copyOfSelectedPost, "after adding");
+        dispatch({
+          type: Constants.POSTS_LIKE_SUCCESS,
+        });
+        dispatch({
+          type: Constants.SELECTED_POST_FETCH_SUCCESS,
+          payload: { ...copyOfSelectedPost },
+        });
+      }
+      updatedPosts[indexOfIdToReplace].likedBy.push(uid);
       dispatch({ type: Constants.POSTS_LIKE_SUCCESS });
       dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: updatedPosts });
       await updateDoc(postDocumentRef(id), {

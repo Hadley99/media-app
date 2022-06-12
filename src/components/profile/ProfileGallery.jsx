@@ -6,32 +6,25 @@ import ImageList from "@mui/material/ImageList";
 import { grey } from "@mui/material/colors";
 import Box from "@mui/system/Box";
 import React, { useState } from "react";
+import { Grid } from "@mui/material";
+import SingleImageItem from "./SingleImageItem";
+import { Link } from "react-router-dom";
 
 const ProfileGallery = ({ posts }) => {
-  const [gridLayout, setGridLayout] = useState(false);
   return (
     <>
-      <Box paddingY={2}>
-        <Typography variant="h4" fontWeight="bold" component="h1">
-          POSTS
-          <Button onClick={() => setGridLayout((prev) => !prev)}>
-            Togle layout
-          </Button>
-        </Typography>
-        <Divider orientation="horizontal" sx={{ backgroundColor: grey[400] }} />
+      <Box sx={{ width: "100%" }}>
+        <Grid container marginBottom={3} spacing={{ xs: 1, sm: 2, md: 3 }}>
+          {posts &&
+            posts.map((post) => (
+              <Grid item xs={12} sm={4} md={4} key={post.id}>
+                <Link to={`/post/${post.id}`}>
+                  <SingleImageItem post={post} />
+                </Link>
+              </Grid>
+            ))}
+        </Grid>
       </Box>
-      <ImageList cols={gridLayout ? 1 : 3} gap={8} variant={"masonry"}>
-        {posts.map((post) => (
-          <ImageListItem key={post.id}>
-            <img
-              src={`${post.image}?w=164&h=164&fit=crop&auto=format`}
-              srcSet={`${post.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={post.description}
-              loading="lazy"
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
     </>
   );
 };

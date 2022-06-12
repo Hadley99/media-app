@@ -16,17 +16,18 @@ const ProfileTop = ({ posts }) => {
   const photoURL = user?.photoURL.replace("s96-c", "s400-c");
   return (
     <Grid container paddingY={4} spacing={2}>
-      <Grid item xs={5}>
+      <Grid item xs={4} sm={5}>
         <Box textAlign="center">
           <Box
             component="img"
-            sx={{ borderRadius: 50, maxHeight: { xs: 120, sm: 150, md: 200 } }}
+            width={{ xs: "100%", sm: 160, md: 180 }}
+            sx={{ borderRadius: 50 }}
             src={photoURL}
             alt={displayName}
           />
         </Box>
       </Grid>
-      <Grid item xs={7}>
+      <Grid item xs={8} sm={7}>
         <Box
           elevation={0}
           sx={{
@@ -38,7 +39,7 @@ const ProfileTop = ({ posts }) => {
           <Typography
             component="h1"
             variant="h3"
-            sx={{ fontSize: { xs: 30, sm: 40 } }}
+            sx={{ fontSize: { xs: 24, sm: 40 } }}
             fontWeight="bold"
           >
             {displayName}
@@ -85,7 +86,12 @@ const ProfileTop = ({ posts }) => {
           </Stack>
           {currentUser?.uid !== user?.uid && (
             <Button
-              variant="contained"
+              sx={{ marginTop: 2 }}
+              variant={
+                user?.followers.includes(currentUser?.uid)
+                  ? "outlined"
+                  : "contained"
+              }
               onClick={() => toggleFollow(user.uid, currentUser.uid)}
             >
               {user?.followers.includes(currentUser?.uid)

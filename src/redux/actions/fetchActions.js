@@ -1,19 +1,8 @@
+import { getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import {
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  Query,
-  query,
-  startAfter,
-  where,
-} from "firebase/firestore";
-import {
-  db,
   fetchSpecificUserData,
   postDocumentRef,
   postsCollectionRef,
-  userDocumentRef,
 } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
@@ -21,11 +10,7 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
   try {
     dispatch({ type: Constants.POSTS_FETCH_REQUEST });
 
-    const q = query(
-      postsCollectionRef(),
-      orderBy("timestamp", "desc"),
-      limit(2)
-    );
+    const q = query(postsCollectionRef(), orderBy("timestamp", "desc"));
 
     const querySnapshot = await getDocs(q);
 
@@ -94,7 +79,7 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
 };
 export const fetchSelectedPost = (postid) => async (dispatch, getState) => {
   try {
-    dispatch({ type: Constants.SELECTED_POST_FETCH_REQUEST });
+    dispatch({ type: Constants.SELECTED_POST_FETCH_REQUEST, payload: null });
 
     const res = await getDoc(postDocumentRef(postid));
     const idRef = res.data().createdBy;
@@ -109,7 +94,6 @@ export const fetchSelectedPost = (postid) => async (dispatch, getState) => {
       timestamp: res.data().timestamp.toDate().toDateString(),
       id: res.id,
     };
-
     dispatch({ type: Constants.SELECTED_POST_FETCH_SUCCESS, payload: allData });
   } catch (error) {
     console.log(error);

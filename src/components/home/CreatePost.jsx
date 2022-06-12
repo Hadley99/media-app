@@ -12,37 +12,49 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import { grey } from "@mui/material/colors";
-import { Button, CardActions } from "@mui/material";
+import { Button, CardActions, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
+import ImageCropTool from "../crop/ImageCropTool";
 const Input = styled("input")({
   display: "none",
 });
 
 const CreatePost = () => {
   const [description, setDescription] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [file, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [tempImg, setTempImg] = useState(null);
   const dispatch = useDispatch();
   const create = useSelector((state) => state.createPost);
   const { loading } = create;
   const user = useSelector((state) => state.userSignin.user);
-  const displayName = user?.displayName;
   const photoURL = user?.photoURL;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(createPost(tempImg, description));
-    setDescription("");
-    setTempImg(null);
+
+  const toggleCropTool = () => {
+    setOpenDialog((prev) => !prev);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(createPost(file, description));
+    setDescription("");
+    setTempImg(null);
+    setFile(null);
+    setImageUrl("");
+  };
+  console.log(file, " file from parent");
+  console.log(imageUrl, "image url from parent");
   return !loading ? (
     <Box component="form" onSubmit={handleSubmit}>
       <Card
         elevation={0}
         sx={{
           borderRadius: 2,
-          backgroundColor: "white",
+
           border: 1,
-          borderColor: grey[300],
+          borderColor: (theme) =>
+            theme.palette.mode === "dark" ? grey[900] : grey[300],
         }}
       >
         <CardHeader
@@ -69,7 +81,8 @@ const CreatePost = () => {
                     accept="image/*"
                     id="icon-button-file"
                     type="file"
-                    onChange={(e) => {
+                    onInput={(e) => {
+                      toggleCropTool();
                       setTempImg(e.target.files[0]);
                     }}
                   />
@@ -95,8 +108,9 @@ const CreatePost = () => {
             <Button disableElevation variant="contained" type="submit">
               POST
             </Button>
-            {tempImg && (
+            {imageUrl && (
               <CardMedia
+                onClick={toggleCropTool}
                 component="img"
                 sx={{
                   borderRadius: 1,
@@ -105,16 +119,35 @@ const CreatePost = () => {
                   marginLeft: "auto",
                 }}
                 height="100"
-                src={URL.createObjectURL(tempImg)}
+                src={URL.createObjectURL(file)}
                 alt="test"
               />
             )}
           </CardActions>
         </CardContent>
       </Card>
+
+      {tempImg && (
+        <ImageCropTool
+          setFile={setFile}
+          setImageUrl={setImageUrl}
+          openDialog={openDialog}
+          toggleCropTool={toggleCropTool}
+          tempImg={URL.createObjectURL(tempImg)}
+        />
+      )}
     </Box>
   ) : (
-    <div>Loading...</div>
+    <Box
+      width="100%"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
+    </Box>
   );
 };
 export default CreatePost;

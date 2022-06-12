@@ -1,45 +1,61 @@
 import Login from "./routes/Login";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
-import { db } from "./firebase/firebase";
+import { useEffect } from "react";
 import Home from "./routes/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "./redux/actions/userAction";
-
 import Profile from "./routes/Profile";
-import { Box } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import SinglePost from "./components/singlePost/SinglePost";
 import AuthenticatedRoutes from "./routes/AuthenticatedRoutes";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, userDocumentRef } from "./firebase/firebase";
+import { Constants } from "./redux/constants/constants";
+import { getDoc } from "firebase/firestore";
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userSignin.user);
+
+  console.log(user);
   useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = userDocumentRef(user.uid);
+        const currentUserFromDb = await getDoc(docRef);
+        dispatch({
+          type: Constants.USER_SIGNIN_SUCCESS,
+          payload: {
+            displayName: currentUserFromDb.data()?.displayName,
+            email: currentUserFromDb.data()?.email,
+            uid: currentUserFromDb.data()?.uid,
+            photoURL: currentUserFromDb.data()?.photoURL,
+          },
+        });
+      } else {
+        dispatch({
+          type: Constants.USER_SIGNIN_SUCCESS,
+          payload: null,
+        });
+      }
+    });
+    //  dispatch(fetchUser());
+  }, []);
 
   return (
-    <Box sx={{}} className="App">
+    <>
       <Router>
         <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route exact path="/" element={<Home />} />
-          <Route path="/user/:id" element={<Profile />} />
-          <Route path="/post/:postid" element={<SinglePost />} />
+          <Route element={<AuthenticatedRoutes />}>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/user/:id" element={<Profile />} />
+            <Route path="/post/:postid" element={<SinglePost />} />
+          </Route>
         </Routes>
       </Router>
-    </Box>
+    </>
   );
 };
 

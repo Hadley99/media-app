@@ -1,9 +1,13 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const DropdownMenu = ({ post, currentUserUid, handleDelete }) => {
+const DropdownMenu = ({ content, setDialogOpen }) => {
   const [anchorEl, setAnchorEl] = useState(false);
+  const user = useSelector((state) => state.userSignin.user);
+  const currentUserUid = user?.uid;
 
   const handleMenuOpen = (e) => {
     setAnchorEl(e.currentTarget);
@@ -11,13 +15,12 @@ const DropdownMenu = ({ post, currentUserUid, handleDelete }) => {
 
   const handleMenuClose = async (id, uid) => {
     setAnchorEl(false);
-    handleDelete(id, uid);
   };
 
   return (
     <>
       <Menu
-        id={post.id}
+        id={content.id}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
@@ -25,16 +28,19 @@ const DropdownMenu = ({ post, currentUserUid, handleDelete }) => {
           "aria-labelledby": "basic-button",
         }}
       >
-        {currentUserUid === post.createdBy.uid && (
+        <MenuItem>
+          <Link to={`/user/${content.createdBy?.uid}`}>Profile</Link>
+        </MenuItem>
+        {currentUserUid === content.createdBy?.uid && (
           <MenuItem
             onClick={() => {
-              handleMenuClose(post.id, post.createdBy.uid);
+              setDialogOpen(true);
+              handleMenuClose();
             }}
           >
             Delete
           </MenuItem>
         )}
-        <MenuItem>Report</MenuItem>
       </Menu>
       <IconButton onClick={handleMenuOpen} aria-label="settings">
         <MoreVertIcon />

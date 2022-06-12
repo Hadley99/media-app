@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -11,13 +10,8 @@ import {
   updateDoc,
   arrayRemove,
   arrayUnion,
-  addDoc,
 } from "firebase/firestore";
-import {
-  auth,
-  userDocumentRef,
-  postDocumentRef,
-} from "../../firebase/firebase";
+import { auth, userDocumentRef } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
 export const login = () => async (dispatch) => {
@@ -62,32 +56,28 @@ export const login = () => async (dispatch) => {
   }
 };
 
-export const fetchUser = () => (dispatch) => {
-  onAuthStateChanged(auth, async (user) => {
-    const userDataFromDb = await getDoc(userDocumentRef(user.uid));
-    const following = userDataFromDb.data().following;
-    const followers = userDataFromDb.data().followers;
-    if (user) {
-      const { displayName, email, uid, photoURL } = user;
-      dispatch({
-        type: Constants.USER_SIGNIN_SUCCESS,
-        payload: { displayName, email, uid, photoURL, following, followers },
-      });
-    } else {
-      dispatch({
-        type: Constants.USER_SIGNIN_SUCCESS,
-        payload: null,
-      });
-    }
-  });
-};
+// export const fetchUser = () => (dispatch) => {
+//   onAuthStateChanged(auth, async (user) => {
+//     if (user) {
+//       const { displayName, email, uid, photoURL } = user;
+//       dispatch({
+//         type: Constants.USER_SIGNIN_SUCCESS,
+//         payload: { displayName, email, uid, photoURL },
+//       });
+//     } else {
+//       dispatch({
+//         type: Constants.USER_SIGNIN_SUCCESS,
+//         payload: null,
+//       });
+//     }
+//   });
+// };
 
 export const logout = () => async (dispatch) => {
   await signOut(auth);
   dispatch({
     type: Constants.USER_SIGNOUT,
   });
-  // setUser();
 
   dispatch({ type: Constants.USER_SIGNOUT });
 };

@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import {
   createCommentsReducer,
+  deleteCommentsReducer,
   fetchCommentsReducer,
 } from "./redux/reducers/commentsReducer";
 import {
@@ -31,9 +32,16 @@ const reducers = combineReducers({
   selectedPost: selectedPostReducer,
   fetchComments: fetchCommentsReducer,
   createComments: createCommentsReducer,
+  deleteComment: deleteCommentsReducer,
 });
 
-const initialState = { fetchPost: { posts: [] } };
+const initialState = {
+  fetchPost: { posts: null },
+  userSignin: { user: null },
+  selectedPost: { post: null },
+  deletePost: { success: false, message: null },
+  deleteComment: { success: false, message: null },
+};
 
 const middleware = [thunk];
 
