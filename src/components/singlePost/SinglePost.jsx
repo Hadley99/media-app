@@ -38,7 +38,10 @@ const SinglePost = () => {
   const { loading: loadingOfComments, errorMessage } = useSelector(
     (state) => state.fetchComments
   );
-
+  const handleDelete = (id, uid) => {
+    dispatch(deletePost(id, uid));
+    navigate("/");
+  };
   const handleClose = () => {
     dispatch({
       type: Constants.DELETE_COMMENTS_SUCCESS,
@@ -68,10 +71,6 @@ const SinglePost = () => {
       });
     };
   }, []);
-  const handleDelete = (id, uid) => {
-    dispatch(deletePost(id, uid));
-    navigate("/");
-  };
 
   return (
     <>
