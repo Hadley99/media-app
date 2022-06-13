@@ -23,14 +23,13 @@ export const fetchCommentsOfPost = (postid) => async (dispatch, getState) => {
       orderBy("timestamp", "desc")
     );
     const querySnapshot = await getDocs(q);
-    let data = [];
 
     if (querySnapshot.docs.length > 0) {
-      querySnapshot.docs.forEach(async (eachDoc) => {
+      const items = querySnapshot.docs.map(async (eachDoc) => {
         const userIdRef = eachDoc.data().createdBy;
         const userResult = await fetchSpecificUserData(userIdRef);
 
-        data.push({
+        return {
           ...eachDoc.data(),
           createdBy: {
             uid: eachDoc.data().createdBy,
@@ -39,11 +38,13 @@ export const fetchCommentsOfPost = (postid) => async (dispatch, getState) => {
           },
           timestamp: eachDoc.data().timestamp.toDate().toDateString(),
           id: eachDoc.id,
-        });
-        dispatch({
-          type: Constants.FETCH_COMMENTS_OF_POST_SUCCESS,
-          payload: [...data],
-        });
+        };
+      });
+      const allComments = await Promise.all(items);
+
+      dispatch({
+        type: Constants.FETCH_COMMENTS_OF_POST_SUCCESS,
+        payload: [...allComments],
       });
     } else {
       dispatch({
@@ -62,7 +63,6 @@ export const createComment =
     try {
       dispatch({ type: Constants.CREATE_COMMENTS_REQUEST });
       const trimmedComment = comment.trim();
-      console.log(trimmedComment);
       await addDoc(commentsCollectionRef(), {
         createdBy: userId,
         postId,

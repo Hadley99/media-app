@@ -109,7 +109,7 @@ const EachPostCard = ({ post, setOpen }) => {
                 </Link>{" "}
               </Typography>
 
-              {post.description}
+              {post.description && post.description}
             </Typography>
             <Typography
               component="small"

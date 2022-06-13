@@ -18,6 +18,7 @@ import {
   getDocs,
   query,
   serverTimestamp,
+  Timestamp,
   updateDoc,
   where,
   writeBatch,
@@ -30,28 +31,34 @@ export const createPost =
     if (tempImg == null) {
       return; // dispatch({ type: Constants.POSTS_CREATE_FAIL, payload: {} });
     }
-    dispatch({ type: Constants.POSTS_CREATE_REQUEST });
-    const {
-      userSignin: {
-        user: { uid },
-      },
-    } = getState();
+    try {
+      dispatch({ type: Constants.POSTS_CREATE_REQUEST });
+      const {
+        userSignin: {
+          user: { uid },
+        },
+      } = getState();
 
-    const imageRef = ref(storage, `images/${uid}/${tempImg.name + v4()}`);
-    await uploadBytes(imageRef, tempImg);
+      const imageRef = ref(storage, `images/${uid}/${tempImg.name + v4()}`);
+      await uploadBytes(imageRef, tempImg);
 
-    const imageUrl = await getDownloadURL(imageRef);
+      const imageUrl = await getDownloadURL(imageRef);
 
-    let res = await addDoc(postsCollectionRef(), {
-      image: imageUrl,
-      description: description,
-      createdBy: uid,
-      likedBy: [],
-      timestamp: serverTimestamp(),
-    });
+      let res = await addDoc(postsCollectionRef(), {
+        image: imageUrl,
+        description: description,
+        createdBy: uid,
+        dummy: Timestamp.now(),
+        likedBy: [],
+        timestamp: new Date(),
+        //  timestamp: Timestamp.now(),
+      });
 
-    dispatch({ type: Constants.POSTS_CREATE_SUCCESS });
-    dispatch(fetchAllPosts());
+      dispatch({ type: Constants.POSTS_CREATE_SUCCESS });
+      dispatch(fetchAllPosts());
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 export const deletePost = (id, createdBy) => async (dispatch, getState) => {

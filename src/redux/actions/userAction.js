@@ -26,6 +26,7 @@ export const login = () => async (dispatch) => {
     const data = await signInWithPopup(auth, googleProvider);
 
     const { displayName, email, uid, photoURL } = data.user;
+    localStorage.setItem("user", JSON.stringify(uid));
     const userRef = userDocumentRef(uid);
     const userDoc = await getDoc(userDocumentRef(uid));
     if (userDoc.exists()) {
@@ -56,24 +57,8 @@ export const login = () => async (dispatch) => {
   }
 };
 
-// export const fetchUser = () => (dispatch) => {
-//   onAuthStateChanged(auth, async (user) => {
-//     if (user) {
-//       const { displayName, email, uid, photoURL } = user;
-//       dispatch({
-//         type: Constants.USER_SIGNIN_SUCCESS,
-//         payload: { displayName, email, uid, photoURL },
-//       });
-//     } else {
-//       dispatch({
-//         type: Constants.USER_SIGNIN_SUCCESS,
-//         payload: null,
-//       });
-//     }
-//   });
-// };
-
 export const logout = () => async (dispatch) => {
+  localStorage.removeItem("user");
   await signOut(auth);
   dispatch({
     type: Constants.USER_SIGNOUT,

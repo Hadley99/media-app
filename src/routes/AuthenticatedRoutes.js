@@ -4,15 +4,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { fetchUser } from "../redux/actions/userAction";
 import Login from "./Login";
 
-const useAuth = () => {
-  const user = useSelector((state) => state.userSignin.user);
-  return user;
-};
-
 const AuthenticatedRoutes = () => {
-  //  const user = useSelector((state) => state.userSignin.user);
-  const isAuth = useAuth();
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  const userIdFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+  return userIdFromLocalStorage ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default AuthenticatedRoutes;

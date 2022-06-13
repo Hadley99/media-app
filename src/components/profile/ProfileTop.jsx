@@ -60,7 +60,7 @@ const ProfileTop = ({ posts }) => {
           >
             <Typography
               textAlign="center"
-              sx={{ fontSize: { md: 20 } }}
+              sx={{ fontSize: { xs: 18, md: 20 } }}
               fontWeight="medium"
             >
               Posts
@@ -69,7 +69,7 @@ const ProfileTop = ({ posts }) => {
             </Typography>
             <Typography
               textAlign="center"
-              sx={{ fontSize: { md: 20 } }}
+              sx={{ fontSize: { xs: 18, md: 20 } }}
               fontWeight="medium"
             >
               Followers <br />
@@ -77,7 +77,7 @@ const ProfileTop = ({ posts }) => {
             </Typography>
             <Typography
               textAlign="center"
-              sx={{ fontSize: { md: 20 } }}
+              sx={{ fontSize: { xs: 18, md: 20 } }}
               fontWeight="medium"
             >
               Following <br />

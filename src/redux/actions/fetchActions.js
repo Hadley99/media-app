@@ -1,8 +1,17 @@
-import { getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import {
   fetchSpecificUserData,
   postDocumentRef,
   postsCollectionRef,
+  db,
 } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
@@ -11,14 +20,13 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
     dispatch({ type: Constants.POSTS_FETCH_REQUEST });
 
     const q = query(postsCollectionRef(), orderBy("timestamp", "desc"));
-
     const querySnapshot = await getDocs(q);
 
-    let items = [];
-    querySnapshot.docs.forEach(async (eachDoc) => {
+    const items = querySnapshot.docs.map(async (eachDoc) => {
       const idRef = eachDoc.data().createdBy;
       const userResult = await fetchSpecificUserData(idRef);
-      items.push({
+
+      return {
         ...eachDoc.data(),
         createdBy: {
           uid: eachDoc.data().createdBy,
@@ -27,9 +35,12 @@ export const fetchAllPosts = () => async (dispatch, getState) => {
         },
         timestamp: eachDoc.data().timestamp.toDate().toDateString(),
         id: eachDoc.id,
-      });
-      dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: items });
+      };
     });
+
+    const posts = await Promise.all(items);
+
+    dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: posts });
   } catch (error) {
     console.log(error);
   }
@@ -55,12 +66,10 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
       orderBy("timestamp", "desc")
     );
     const querySnapshot = await getDocs(q);
-    let items = [];
-
-    querySnapshot.docs.forEach(async (eachDoc) => {
+    const items = querySnapshot.docs.map(async (eachDoc) => {
       const idRef = eachDoc.data().createdBy;
       const userResult = await fetchSpecificUserData(idRef);
-      items.push({
+      return {
         ...eachDoc.data(),
         createdBy: {
           uid: eachDoc.data().createdBy,
@@ -69,10 +78,12 @@ export const fetchSelectedPosts = (uid) => async (dispatch, getState) => {
         },
         timestamp: eachDoc.data().timestamp.toDate().toDateString(),
         id: eachDoc.id,
-      });
-
-      dispatch({ type: Constants.SELECTED_USER_POSTS_SUCCESS, payload: items });
+      };
     });
+
+    const post = await Promise.all(items);
+
+    dispatch({ type: Constants.SELECTED_USER_POSTS_SUCCESS, payload: post });
   } catch (error) {
     console.log(error);
   }
