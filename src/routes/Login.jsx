@@ -48,7 +48,7 @@ const Login = () => {
               sx={{
                 border: 1,
                 borderColor: grey[800],
-                backdropFilter: "blur(5px)",
+                backdropFilter: "blur(20px)",
                 backgroundColor: "transparent",
               }}
             >

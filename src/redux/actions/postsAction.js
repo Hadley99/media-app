@@ -75,15 +75,6 @@ export const deletePost = (id, createdBy) => async (dispatch, getState) => {
       const postRef = postDocumentRef(id);
       const batch = writeBatch(db);
 
-      let copyOfPosts = [...posts];
-      let filteredArray = copyOfPosts.filter((post) => post.id !== id);
-
-      dispatch({
-        type: Constants.POSTS_DELETE_SUCCESS,
-        payload: { success: true, message: "Post Deleted Succesfully!" },
-      });
-      dispatch({ type: Constants.POSTS_FETCH_SUCCESS, payload: filteredArray });
-
       //Deleting comments in firestore db
       const q = query(commentsCollectionRef(), where("postId", "==", `${id}`));
       const queryResult = await getDocs(q);
@@ -92,6 +83,11 @@ export const deletePost = (id, createdBy) => async (dispatch, getState) => {
       });
       await batch.commit();
       await deleteDoc(postRef);
+      dispatch({
+        type: Constants.POSTS_DELETE_SUCCESS,
+        payload: { success: true, message: "Post Deleted Succesfully!" },
+      });
+      dispatch(fetchAllPosts());
     } else {
       dispatch({
         type: Constants.POSTS_DELETE_FAIL,
