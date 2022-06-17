@@ -40,13 +40,14 @@ const Navbar = (props) => {
           >
             <Link to="/">
               <Typography
+                style={{ fontFamily: "Leckerli One, cursive" }}
                 color={props.themeToggler ? "primary" : ""}
                 variant="h6"
                 noWrap
                 component="div"
                 sx={{ mr: 2, display: { xs: "flex" } }}
               >
-                InstaClone
+                Friend.ly
               </Typography>
             </Link>
             <Box>
