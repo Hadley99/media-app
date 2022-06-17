@@ -27,20 +27,20 @@ const Input = styled("input")({
 
 const ProfileTop = ({ posts }) => {
   const dispatch = useDispatch();
-  const toggleFollow = (followerId, followeeId) => {
-    dispatch(toggleUserFollow(followerId, followeeId));
-  };
   const { user: currentUser, loading: currentUserLoading } = useSelector(
     (state) => state.userSignin
   );
-  const user = useSelector((state) => state.selectedUser.user);
 
+  const currUser = useSelector((state) => state.userSignin.user);
+  const user = useSelector((state) => state.selectedUser.user);
   const displayName = user?.displayName;
+
   // const photoURL = user?.photoURL.replace("s96-c", "s400-c");
 
   const { loading: loadingOfProfileChange } = useSelector(
     (state) => state.changeProfilePhoto
   );
+
   //change name
   const [changeUserName, setChangeUserName] = useState(null);
   const [toggleUserNameInput, setToggleUserNameInput] = useState(false);
@@ -50,6 +50,9 @@ const ProfileTop = ({ posts }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [file, setFile] = useState(null);
 
+  const toggleFollow = (followerId, followeeId) => {
+    dispatch(toggleUserFollow(followerId, followeeId));
+  };
   const toggleCropTool = () => {
     setOpenDialog((prev) => !prev);
   };
@@ -73,28 +76,42 @@ const ProfileTop = ({ posts }) => {
             {loadingOfProfileChange || currentUserLoading ? (
               <LoadingAnimation />
             ) : (
-              <label htmlFor="icon-button-file">
-                <Input
-                  accept="image/*"
-                  id="icon-button-file"
-                  type="file"
-                  onInput={(e) => {
-                    toggleCropTool();
-                    setTempImg(e.target.files[0]);
-                  }}
-                />
-                <Tooltip title="Click To Change Profile Photo">
-                  <IconButton aria-label="upload picture" component="span">
-                    <Box
-                      component="img"
-                      width={{ xs: "100%", sm: 160, md: 180 }}
-                      sx={{ borderRadius: 50 }}
-                      src={file ? URL.createObjectURL(file) : user?.photoURL}
-                      alt={displayName}
+              <>
+                {user?.uid === currUser?.uid ? (
+                  <label htmlFor="icon-button-file">
+                    <Input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      onInput={(e) => {
+                        toggleCropTool();
+                        setTempImg(e.target.files[0]);
+                      }}
                     />
-                  </IconButton>
-                </Tooltip>
-              </label>
+                    <Tooltip title="Click To Change Profile Photo">
+                      <IconButton aria-label="upload picture" component="span">
+                        <Box
+                          component="img"
+                          width={{ xs: "100%", sm: 160, md: 180 }}
+                          sx={{ borderRadius: 50 }}
+                          src={
+                            file ? URL.createObjectURL(file) : user?.photoURL
+                          }
+                          alt={displayName}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </label>
+                ) : (
+                  <Box
+                    component="img"
+                    width={{ xs: "100%", sm: 160, md: 180 }}
+                    sx={{ borderRadius: 50 }}
+                    src={file ? URL.createObjectURL(file) : user?.photoURL}
+                    alt={displayName}
+                  />
+                )}
+              </>
             )}
             {file && (
               <>
@@ -132,9 +149,13 @@ const ProfileTop = ({ posts }) => {
           >
             {displayName}
 
-            <IconButton onClick={handleToggleUserNameInput}>
-              <SettingsIcon />
-            </IconButton>
+            {user?.uid === currUser?.uid ? (
+              <IconButton onClick={handleToggleUserNameInput}>
+                <SettingsIcon />
+              </IconButton>
+            ) : (
+              ""
+            )}
           </Typography>
           {toggleUserNameInput && (
             <>
