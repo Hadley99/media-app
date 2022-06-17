@@ -61,7 +61,7 @@ const Login = () => {
                   fontWeight="bold"
                   component="h1"
                 >
-                  Welcome To InstaClone
+                  Welcome To Friend.ly
                 </Typography>
                 <Typography
                   color="white"
