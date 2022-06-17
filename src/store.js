@@ -11,11 +11,13 @@ import {
   deletePostReducer,
   fetchPostReducer,
   likePostReducer,
+  loadMoreReducer,
   selectedPostReducer,
   selectedPostsReducer,
 } from "./redux/reducers/PostsReducer";
 
 import {
+  changeUserProfileDetails,
   selectedUserReducer,
   toggleUserFollowersReducer,
   userSignInReducer,
@@ -33,10 +35,12 @@ const reducers = combineReducers({
   fetchComments: fetchCommentsReducer,
   createComments: createCommentsReducer,
   deleteComment: deleteCommentsReducer,
+  changeProfilePhoto: changeUserProfileDetails,
 });
 
 const initialState = {
-  fetchPost: { posts: null },
+  createPost: { loading: false },
+  fetchPost: { posts: null, lastDoc: null, end: false },
   userSignin: { user: null },
   selectedPost: { post: null },
   deletePost: { success: false, message: null },

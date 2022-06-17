@@ -1,6 +1,6 @@
-import { Container } from "@mui/material";
-import { Box } from "@mui/system";
 import React from "react";
+import Container from "@mui/material/Container";
+import Box from "@mui/system/Box";
 import ProfileMain from "../components/profile/ProfileMain";
 
 const Profile = () => {

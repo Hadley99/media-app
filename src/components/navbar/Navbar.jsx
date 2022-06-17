@@ -1,17 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Link } from "react-router-dom";
-import Button from "@mui/material/Button";
-import { logout } from "../../redux/actions/userAction";
-import { useDispatch } from "react-redux";
-import { grey } from "@mui/material/colors";
-import useScrollTrigger from "@mui/material/useScrollTrigger";
-//import HideOnScroll from "./HideOnScroll";
-
+import Box from "@mui/system/Box";
+import IconButton from "@mui/material/IconButton";
 import Slide from "@mui/material/Slide";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+
 import AvatarIcon from "./AvatarIcon";
 function HideOnScroll(props) {
   const { children, window } = props;
@@ -27,11 +26,6 @@ function HideOnScroll(props) {
 }
 
 const Navbar = (props) => {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   return (
     <HideOnScroll {...props}>
       <AppBar>
@@ -46,6 +40,7 @@ const Navbar = (props) => {
           >
             <Link to="/">
               <Typography
+                color={props.themeToggler ? "primary" : ""}
                 variant="h6"
                 noWrap
                 component="div"
@@ -54,7 +49,16 @@ const Navbar = (props) => {
                 InstaClone
               </Typography>
             </Link>
-            <AvatarIcon />
+            <Box>
+              <IconButton onClick={props.handleThemeToggler}>
+                {props.themeToggler ? (
+                  <LightModeIcon color="primary" />
+                ) : (
+                  <DarkModeIcon color="secondary" />
+                )}
+              </IconButton>
+              <AvatarIcon />
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>

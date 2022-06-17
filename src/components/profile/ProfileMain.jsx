@@ -1,19 +1,20 @@
-import Box from "@mui/material/Box";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchSelectedPosts,
   fetchSelectedUser,
 } from "../../redux/actions/fetchActions";
 import ProfileTop from "./ProfileTop";
 import ProfileGallery from "./ProfileGallery";
-import { Divider } from "@mui/material";
 
 const ProfileMain = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.selectedPosts.posts) || [];
+  const { posts, error } = useSelector((state) => state.selectedPosts);
 
   useEffect(() => {
     dispatch(fetchSelectedUser(id));
@@ -24,7 +25,7 @@ const ProfileMain = () => {
     <Box sx={{ flexGrow: 1 }}>
       <ProfileTop posts={posts} />
       <Divider sx={{ marginBottom: 3 }} />
-      <ProfileGallery posts={posts} />
+      <ProfileGallery posts={posts} error={error} />
     </Box>
   );
 };

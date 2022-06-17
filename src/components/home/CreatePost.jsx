@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createPost } from "../../redux/actions/postsAction";
+import { Link } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -11,10 +11,15 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import CardActions from "@mui/material/CardActions";
 import { grey } from "@mui/material/colors";
-import { Button, CardActions, CircularProgress } from "@mui/material";
-import { Link } from "react-router-dom";
+
+import { createPost } from "../../redux/actions/postsAction";
 import ImageCropTool from "../crop/ImageCropTool";
+import { useDispatch, useSelector } from "react-redux";
+
 const Input = styled("input")({
   display: "none",
 });
@@ -27,8 +32,8 @@ const CreatePost = () => {
   const [tempImg, setTempImg] = useState(null);
   const dispatch = useDispatch();
   const create = useSelector((state) => state.createPost);
-  const { loading } = create;
-  const user = useSelector((state) => state.userSignin.user);
+  const { loading, error } = create;
+  const { user } = useSelector((state) => state.userSignin);
   const photoURL = user?.photoURL;
 
   const toggleCropTool = () => {
@@ -44,7 +49,7 @@ const CreatePost = () => {
     setImageUrl("");
   };
 
-  return !loading ? (
+  return (
     <Box component="form" onSubmit={handleSubmit}>
       <Card
         elevation={0}
@@ -66,11 +71,17 @@ const CreatePost = () => {
           titleTypographyProps={{ fontWeight: "medium", fontSize: "16px" }}
         />
         <CardContent sx={{ "&:last-child": { paddingBottom: 1 } }}>
+          {error && (
+            <Alert severity="error" variant="filled">
+              {error}
+            </Alert>
+          )}
           <TextField
             fullWidth
             variant="standard"
             id="outlined-textarea"
             placeholder="What's on your mind ?"
+            value={description}
             multiline
             maxRows={4}
             InputProps={{
@@ -104,7 +115,12 @@ const CreatePost = () => {
               alignItems: "end",
             }}
           >
-            <Button disableElevation variant="contained" type="submit">
+            <Button
+              disableElevation
+              variant="contained"
+              disabled={loading}
+              type="submit"
+            >
               POST
             </Button>
             {imageUrl && (
@@ -135,17 +151,6 @@ const CreatePost = () => {
           tempImg={URL.createObjectURL(tempImg)}
         />
       )}
-    </Box>
-  ) : (
-    <Box
-      width="100%"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <CircularProgress />
     </Box>
   );
 };

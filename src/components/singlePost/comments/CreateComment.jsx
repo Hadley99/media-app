@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createComment } from "../../redux/actions/commentsAction";
+import { createComment } from "../../../redux/actions/commentsAction";
 
 const CreateComment = ({ postid }) => {
   const dispatch = useDispatch();

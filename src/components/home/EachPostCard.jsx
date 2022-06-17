@@ -1,33 +1,35 @@
 import React, { useState } from "react";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { grey } from "@mui/material/colors";
 
-import {
-  LazyLoadComponent,
-  LazyLoadImage,
-} from "react-lazy-load-image-component";
-import { Link } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+
 import DropdownMenu from "./DropdownMenu";
-import { deletePost } from "../../redux/actions/postsAction";
 import LikeButton from "../LikeButton";
 import ConfirmDialog from "../ConfirmDialog";
-import { useDispatch, useSelector } from "react-redux";
+import { deletePost } from "../../redux/actions/postsAction";
 
-const EachPostCard = ({ post, setOpen }) => {
+// import {
+//   LazyLoadComponent,
+//   LazyLoadImage,
+// } from "react-lazy-load-image-component";
+const EachPostCard = ({ post }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleDelete = (id, uid) => {
-    dispatch(deletePost(id, uid));
+  const handleDelete = (id, uid, imageUrl) => {
+    dispatch(deletePost(id, uid, imageUrl));
   };
 
   return (
@@ -38,7 +40,6 @@ const EachPostCard = ({ post, setOpen }) => {
         sx={{
           borderRadius: 2,
           marginBottom: 2,
-          //   backgroundColor: "white",
           border: 1,
           borderColor: (theme) =>
             theme.palette.mode === "dark" ? grey[900] : grey[300],
@@ -76,10 +77,11 @@ const EachPostCard = ({ post, setOpen }) => {
           <CardMedia
             component="img"
             sx={{
-              maxHeight: { xs: 400, md: 500 },
-              //  paddingTop: 0,
-              //  paddingBottom: 0,
+              height: { xs: 325, sm: 400, md: 500 },
+              //  aspectRatio: "1/1",
+              //maxHeight: { xs: 400, md: 500 },
               objectFit: "contain",
+              objectPosition: "center",
               width: "100%",
               backgroundColor: "black",
             }}
@@ -96,12 +98,35 @@ const EachPostCard = ({ post, setOpen }) => {
             paddingBottom: 1,
           }}
         >
-          <LikeButton post={post} />
+          <Stack flexDirection="row" alignItems="center">
+            <>
+              <LikeButton post={post} />
+            </>
+            <>
+              {/* <Typography marginLeft={1}>{post.commentsCount}</Typography> */}
+              <Link to={`/post/${post.id}`}>
+                <IconButton
+                  disableRipple
+                  sx={{
+                    padding: 0,
+                    margin: 1,
+                    "&:hover": {
+                      color: grey[400],
+                    },
+                  }}
+                >
+                  <InsertCommentOutlinedIcon />
+                </IconButton>
+              </Link>
+            </>
+          </Stack>
           <Box>
-            <Typography component="small" fontSize={14} fontWeight="bold">
-              {post.likedBy.length}{" "}
-              {post.likedBy.length === 1 ? "Like" : "Likes"}
-            </Typography>
+            <>
+              <Typography>
+                {post.likedBy.length}{" "}
+                {post.likedBy.length === 1 ? "like" : "likes"}
+              </Typography>
+            </>
             <Typography fontSize={16} variant="body2">
               <Typography component="span" fontWeight="bold">
                 <Link to={`/user/${post.createdBy.uid}`}>

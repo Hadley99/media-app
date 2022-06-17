@@ -11,6 +11,7 @@ export const createPostReducer = (state = {}, action) => {
     case Constants.POSTS_CREATE_FAIL:
       return {
         loading: false,
+        error: action.payload.error,
         errorMessage: action.payload.message,
       };
 
@@ -45,16 +46,38 @@ export const deletePostReducer = (state = {}, action) => {
 export const fetchPostReducer = (state = {}, action) => {
   switch (action.type) {
     case Constants.POSTS_FETCH_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
 
     case Constants.POSTS_FETCH_SUCCESS:
-      return { loading: false, posts: [...action.payload] };
+      return {
+        ...state,
+        loading: false,
+        posts: [...action.payload.posts],
+        lastDoc: action.payload.lastDoc,
+      };
+    case Constants.POSTS_RESET:
+      return {
+        loading: false,
+        posts: null,
+        lastDoc: null,
+        end: false,
+      };
 
     case Constants.POSTS_FETCH_FAIL:
       return {
+        ...state,
         loading: false,
+        end: action.payload.end,
         errorCode: action.payload.code,
         errorMessage: action.payload.message,
+      };
+
+    case Constants.POSTS_LOADMORE_SUCCESS:
+      return {
+        ...state,
+
+        posts: [...state.posts, ...action.payload.posts],
+        lastDoc: action.payload.lastDoc,
       };
 
     default:
@@ -89,6 +112,7 @@ export const selectedPostsReducer = (state = {}, action) => {
     case Constants.SELECTED_USER_POSTS_FAIL:
       return {
         loading: false,
+        error: action.payload.error,
         errorCode: action.payload.code,
         errorMessage: action.payload.message,
       };

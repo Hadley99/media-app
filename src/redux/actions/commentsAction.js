@@ -2,15 +2,18 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
+  increment,
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import {
   commentsCollectionRef,
   commentsDocumentRef,
   fetchSpecificUserData,
+  postDocumentRef,
 } from "../../firebase/firebase";
 import { Constants } from "../constants/constants";
 
@@ -63,6 +66,10 @@ export const createComment =
     try {
       dispatch({ type: Constants.CREATE_COMMENTS_REQUEST });
       const trimmedComment = comment.trim();
+
+      await updateDoc(postDocumentRef(postId), {
+        commentsCount: increment(1),
+      });
       await addDoc(commentsCollectionRef(), {
         createdBy: userId,
         postId,
@@ -82,6 +89,9 @@ export const deleteComment =
       dispatch({ type: Constants.DELETE_COMMENTS_REQUEST });
 
       const commentRef = commentsDocumentRef(commentId);
+      await updateDoc(postDocumentRef(postId), {
+        commentsCount: increment(-1),
+      });
       await deleteDoc(commentRef);
       dispatch({
         type: Constants.DELETE_COMMENTS_SUCCESS,

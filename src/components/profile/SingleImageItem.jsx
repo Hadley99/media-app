@@ -1,10 +1,10 @@
-import Card from "@mui/material/Card";
+import Paper from "@mui/material/Paper";
 import React from "react";
 
 const SingleImageItem = ({ post }) => {
   return (
     <>
-      <Card sx={{ paddingX: 1, paddingTop: 1, paddingBottom: 3 }}>
+      <Paper sx={{ paddingX: 1, paddingTop: 1 }}>
         <img
           style={{ borderRadius: "3px" }}
           width="100%"
@@ -13,7 +13,7 @@ const SingleImageItem = ({ post }) => {
           alt={post.description}
           loading="lazy"
         />
-      </Card>
+      </Paper>
     </>
   );
 };

@@ -1,6 +1,8 @@
-import { Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
-import { Avatar, IconButton } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -19,7 +21,7 @@ const ProfileDetailsDropdown = ({ handleLogout }) => {
         id="menu-appbar"
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: "top",
+          vertical: "bottom",
           horizontal: "right",
         }}
         keepMounted

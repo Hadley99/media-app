@@ -28,7 +28,7 @@ const ConfirmDialog = ({
           <Button onClick={handleClose}>Disagree</Button>
           <Button
             onClick={() => {
-              handleAction(content.id, content.createdBy.uid);
+              handleAction(content.id, content.createdBy.uid, content.image);
               handleClose();
             }}
           >

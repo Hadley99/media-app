@@ -1,17 +1,18 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Typography,
-} from "@mui/material";
+import React, { useEffect } from "react";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import { grey } from "@mui/material/colors";
-import React, { useEffect, useState } from "react";
+
 import GoogleButton from "react-google-button";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../redux/actions/userAction";
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const Login = () => {
                   Welcome To InstaClone
                 </Typography>
                 <Typography
+                  color="white"
                   textAlign="center"
                   variant="h6"
                   gutterBottom

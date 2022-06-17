@@ -1,21 +1,16 @@
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import grey from "@mui/material/colors/grey";
+import Typography from "@mui/material/Typography";
+import { grey } from "@mui/material/colors";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  deleteComment,
-  fetchCommentsOfPost,
-  resetCommentsOfPost,
-} from "../../redux/actions/commentsAction";
-import DropdownMenu from "../home/DropdownMenu";
-import { Typography } from "@mui/material";
-import ConfirmDialog from "../ConfirmDialog";
+import { deleteComment } from "../../../redux/actions/commentsAction";
+import DropdownMenu from "../../home/DropdownMenu";
+import ConfirmDialog from "../../ConfirmDialog";
 
 const AllComments = ({ comment, postId }) => {
   const dispatch = useDispatch();

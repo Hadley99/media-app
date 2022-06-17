@@ -60,3 +60,21 @@ export const toggleUserFollowersReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const changeUserProfileDetails = (state = {}, action) => {
+  switch (action.type) {
+    case Constants.CHANGE_USER_PROFILE_DATA_REQUEST:
+      return { loading: true };
+    case Constants.CHANGE_USER_PROFILE_DATA_SUCCESS:
+      return { loading: false };
+    case Constants.CHANGE_USER_PROFILE_DATA_FAIL:
+      return {
+        loading: false,
+        errorCode: action.payload.code,
+        errorMessage: action.payload.message,
+      };
+
+    default:
+      return state;
+  }
+};
