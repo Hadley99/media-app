@@ -9,6 +9,8 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 
+import ReactReadMoreReadLess from "react-read-more-read-less";
+
 import CreateComment from "./comments/CreateComment";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -133,7 +135,17 @@ const SinglePost = () => {
                             }}
                           >
                             <Typography paddingY={1}>
-                              {post.description}
+                              {post.description && (
+                                <ReactReadMoreReadLess
+                                  charLimit={200}
+                                  readMoreText={"Read more"}
+                                  readLessText={"Read less"}
+                                  readMoreClassName="read-more-less--more"
+                                  readLessClassName="read-more-less--less"
+                                >
+                                  {post.description}
+                                </ReactReadMoreReadLess>
+                              )}
                             </Typography>
                             <PostStats post={post} allComments={allComments} />
                           </CardContent>

@@ -15,6 +15,8 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 
+import ReactReadMoreReadLess from "react-read-more-read-less";
+
 import DropdownMenu from "./DropdownMenu";
 import LikeButton from "../LikeButton";
 import ConfirmDialog from "../ConfirmDialog";
@@ -133,8 +135,17 @@ const EachPostCard = ({ post }) => {
                   {post.createdBy.displayName}
                 </Link>{" "}
               </Typography>
-
-              {post.description && post.description}
+              {post.description && (
+                <ReactReadMoreReadLess
+                  charLimit={200}
+                  readMoreText={"Read more"}
+                  readLessText={"Read less"}
+                  readMoreClassName="read-more-less--more"
+                  readLessClassName="read-more-less--less"
+                >
+                  {post.description}
+                </ReactReadMoreReadLess>
+              )}
             </Typography>
             <Typography
               component="small"

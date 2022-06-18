@@ -61,3 +61,18 @@ a {
   padding: none;
   object-fit: cover; */
 }
+/* read more */
+
+.read-more-less--more,
+.read-more-less--less {
+  color: #ffffff;
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-weight: bold;
+}
+.read-more-less--more:hover,
+.read-more-less--less:hover {
+  background-color: #6a7dd11c;
+  font-weight: bold;
+}
