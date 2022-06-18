@@ -1,9 +1,15 @@
+import React from "react";
+
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
-import React from "react";
 import LikeButton from "../LikeButton";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+import { grey } from "@mui/material/colors";
+import ShareIcon from "@mui/icons-material/Share";
+
+import { RWebShare } from "react-web-share";
+
 const PostStats = ({ post, allComments }) => {
   return (
     <>
@@ -33,6 +39,28 @@ const PostStats = ({ post, allComments }) => {
             {allComments?.length}{" "}
             {allComments?.length === 1 ? "Comment" : "Comments"}
           </Typography>
+        </>
+        <>
+          <RWebShare
+            data={{
+              text: `Check this post out ${post?.createdBy?.displayName} on Friend.ly`,
+              url: `${window.location.href}`,
+              title: "Friend.ly",
+            }}
+          >
+            <IconButton
+              disableRipple
+              sx={{
+                padding: 0,
+                marginLeft: 1,
+                "&:hover": {
+                  color: grey[400],
+                },
+              }}
+            >
+              <ShareIcon />
+            </IconButton>
+          </RWebShare>
         </>
       </Stack>
     </>

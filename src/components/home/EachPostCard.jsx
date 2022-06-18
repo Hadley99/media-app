@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { grey } from "@mui/material/colors";
-
+import ShareIcon from "@mui/icons-material/Share";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 
 import ReactReadMoreReadLess from "react-read-more-read-less";
+import { RWebShare } from "react-web-share";
 
 import DropdownMenu from "./DropdownMenu";
 import LikeButton from "../LikeButton";
@@ -111,7 +112,7 @@ const EachPostCard = ({ post }) => {
                   disableRipple
                   sx={{
                     padding: 0,
-                    margin: 1,
+                    marginLeft: 1,
                     "&:hover": {
                       color: grey[400],
                     },
@@ -120,6 +121,28 @@ const EachPostCard = ({ post }) => {
                   <InsertCommentOutlinedIcon />
                 </IconButton>
               </Link>
+            </>
+            <>
+              <RWebShare
+                data={{
+                  text: `Check this post out by ${post?.createdBy?.displayName} on Friend.ly`,
+                  url: `${window.location.href}post/${post.id}`,
+                  title: "Friend.ly",
+                }}
+              >
+                <IconButton
+                  disableRipple
+                  sx={{
+                    padding: 0,
+                    marginLeft: 1,
+                    "&:hover": {
+                      color: grey[400],
+                    },
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </RWebShare>
             </>
           </Stack>
           <Box>
