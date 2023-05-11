@@ -10,7 +10,7 @@ import {
 import { collection, doc, getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
@@ -29,6 +29,11 @@ export const storage = getStorage(app);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 //setPersistence(auth, browserSessionPersistence);
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider("6LcBe_0lAAAAAAi6WwCLqebH-gOPG7dbClOz_xUB"),
+  isTokenAutoRefreshEnabled: true,
+});
 
 export const postsCollectionRef = () => collection(db, "posts");
 export const commentsCollectionRef = () => collection(db, "comments");
