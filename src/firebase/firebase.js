@@ -25,15 +25,17 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+if (typeof window !== "undefined") {
+  const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(process.env.REACT_APP_FIREBASE_APP_CHECK),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
+
 export const storage = getStorage(app);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 //setPersistence(auth, browserSessionPersistence);
-
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider("6LcBe_0lAAAAAAi6WwCLqebH-gOPG7dbClOz_xUB"),
-  isTokenAutoRefreshEnabled: true,
-});
 
 export const postsCollectionRef = () => collection(db, "posts");
 export const commentsCollectionRef = () => collection(db, "comments");
