@@ -28,7 +28,7 @@ const app = initializeApp(firebaseConfig);
 
 window.FIREBASE_APPCHECK_DEBUG_TOKEN =
   process.env.REACT_APP_FIREBASE_DEBUG_TOKEN;
-
+console.log({ key: process.env.REACT_APP_FIREBASE_APP_CHECK });
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
     process.env.REACT_APP_FIREBASE_APP_CHECK
