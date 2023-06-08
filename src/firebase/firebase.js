@@ -31,7 +31,7 @@ window.FIREBASE_APPCHECK_DEBUG_TOKEN =
 
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
-    "6LcQ6HwmAAAAAP4rxQV52yjttesTntXFmodi2390"
+    process.env.REACT_APP_FIREBASE_APP_CHECK
   ),
   isTokenAutoRefreshEnabled: true,
 });
