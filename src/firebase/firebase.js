@@ -28,12 +28,14 @@ const app = initializeApp(firebaseConfig);
 
 window.FIREBASE_APPCHECK_DEBUG_TOKEN =
   process.env.REACT_APP_FIREBASE_DEBUG_TOKEN;
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider(
-    process.env.REACT_APP_FIREBASE_APP_CHECK
-  ),
-  isTokenAutoRefreshEnabled: true,
-});
+if (process.env) {
+  const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(
+      process.env.REACT_APP_FIREBASE_APP_CHECK
+    ),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
 
 export const storage = getStorage(app);
 export const db = getFirestore(app);
