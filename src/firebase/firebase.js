@@ -10,7 +10,11 @@ import {
 import { collection, doc, getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import {
+  initializeAppCheck,
+  ReCaptchaV3Provider,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
@@ -26,8 +30,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+window.FIREBASE_APPCHECK_DEBUG_TOKEN =
+  process.env.REACT_APP_FIREBASE_DEBUG_TOKEN;
+
 const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(process.env.REACT_APP_FIREBASE_APP_CHECK),
+  provider: new ReCaptchaEnterpriseProvider(
+    process.env.REACT_APP_FIREBASE_APP_CHECK
+  ),
   isTokenAutoRefreshEnabled: true,
 });
 
